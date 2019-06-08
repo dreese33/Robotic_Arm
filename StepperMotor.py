@@ -70,3 +70,4 @@ class StepperMotorMultithreading():
     def cleanupGpio(self):
         print("Cleaning up")
         gpio.cleanup()
+    
