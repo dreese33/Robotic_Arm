@@ -53,90 +53,24 @@ class Test1():
             motor1.startMotor(240)
             motor2.startMotor(60)"""
             
-            """
-                
-            """
-
-            #Test code run 1
-            #gpio.output(directionLarge, CCW)
-            #gpio.output(directionSmall, CCW)
-            """
-            while True:
-                gpio.output(directionLarge, CCW)
-                for a in range(400):
-                    gpio.output(stepLarge, gpio.HIGH)
-                    sleep(delayIncrement)
-                    gpio.output(stepLarge, gpio.LOW)
-                    sleep(delayIncrement)
-                sleep(1)
-                gpio.output(directionLarge, CW)
-                for b in range(400):
-                    gpio.output(stepLarge, gpio.HIGH)
-                    sleep(delayIncrement)
-                    gpio.output(stepLarge, gpio.LOW)
-                    sleep(delayIncrement)
-                sleep(1)
-            """
-            """
-            while True:
-                gpio.output(directionLarge, CCW)
-                gpio.output(directionSmall, CCW)
-                
-                for i in range(500):
-                    gpio.output(stepLarge, gpio.HIGH)
-                    gpio.output(stepSmall, gpio.HIGH)
-                    sleep(0.001)
-                    gpio.output(stepLarge, gpio.LOW)
-                    gpio.output(stepSmall, gpio.LOW)
-                    sleep(0.001)
-                    
-                sleep(1)
-                gpio.output(directionLarge, CW)
-                gpio.output(directionSmall, CW)
-                
-                for a in range(500):
-                    gpio.output(stepLarge, gpio.HIGH)
-                    gpio.output(stepSmall, gpio.HIGH)
-                    sleep(0.001)
-                    gpio.output(stepLarge, gpio.LOW)
-                    gpio.output(stepSmall, gpio.LOW)
-                    sleep(0.001)
-                    
-                sleep(1)
-            
-            """
-            #delaysLarge *= 2
-            
             #Run two motors simultaneously at any speed
             while True:
                 gpio.output(directionLarge, CCW)
                 gpio.output(directionSmall, CCW)
-                #for x in range(200):
                 for x in range(500):
                     lowSetLarge = False
                     lowSetSmall = False
                     if (lowReadyLarge):
-                        #if (highLowDelay > 0):
-                            #highLowDelay -= 1
                             gpio.output(stepLarge, gpio.LOW)
                             lowReadyLarge = False
                             lowSetLarge = True
-                            #print("Larged")
-                        #else:
-                            #highLowDelay += 1
                         
                     if (lowReadySmall):
-                        #if (highLowDelay > 0):
-                            #highLowDelay -= 1
                             gpio.output(stepSmall, gpio.LOW)
                             lowReadySmall = False
                             lowSetSmall = True
-                            #print("Smalld")
-                        #else:
-                            #highLowDelay += 1
                         
                     if (lowHighSet):
-                        #sleep(delayIncrement)
                         lowHighSet = False
                         lowHighSetPrev = True
                     
@@ -144,29 +78,24 @@ class Test1():
                         gpio.output(stepLarge, gpio.HIGH)
                         lowReadyLarge = True
                         lowHighSet = True
-                        #print("Large")
                         
                     if (delays % delaysSmall == 0 and not lowSetSmall):
                         gpio.output(stepSmall, gpio.HIGH)
                         lowReadySmall = True
                         lowHighSet = True
-                        #print("Small")
                         
                     if (lowHighSet):
                         sleep(delayIncrement)
                         delays += 1
-                        #print(delays)
                         lowHighSet = False
                         
                         if (lowHighSetPrev):
                             sleep(delayIncrement)
                             delays += 1
-                            #print(delays)
                             lowHighSetPrev = False
                     else:
                         sleep(delayIncrement)
                         delays += 1
-                        #print(delays)
                 sleep(1)
                 
                 gpio.output(directionLarge, CW)
@@ -176,27 +105,16 @@ class Test1():
                     lowSetLarge = False
                     lowSetSmall = False
                     if (lowReadyLarge):
-                        #if (highLowDelay > 0):
-                            #highLowDelay -= 1
                             gpio.output(stepLarge, gpio.LOW)
                             lowReadyLarge = False
                             lowSetLarge = True
-                            #print("Larged")
-                        #else:
-                            #highLowDelay += 1
                         
                     if (lowReadySmall):
-                        #if (highLowDelay > 0):
-                            #highLowDelay -= 1
                             gpio.output(stepSmall, gpio.LOW)
                             lowReadySmall = False
                             lowSetSmall = True
-                            #print("Smalld")
-                        #else:
-                            #highLowDelay += 1
                         
                     if (lowHighSet):
-                        #sleep(delayIncrement)
                         lowHighSet = False
                         lowHighSetPrev = True
                     
@@ -204,29 +122,24 @@ class Test1():
                         gpio.output(stepLarge, gpio.HIGH)
                         lowReadyLarge = True
                         lowHighSet = True
-                        #print("Large")
                         
                     if (delays % delaysSmall == 0 and not lowSetSmall):
                         gpio.output(stepSmall, gpio.HIGH)
                         lowReadySmall = True
                         lowHighSet = True
-                        #print("Small")
                         
                     if (lowHighSet):
                         sleep(delayIncrement)
                         delays += 1
-                        #print(delays)
                         lowHighSet = False
                         
                         if (lowHighSetPrev):
                             sleep(delayIncrement)
                             delays += 1
-                            #print(delays)
                             lowHighSetPrev = False
                     else:
                         sleep(delayIncrement)
                         delays += 1
-                        #print(delays)
                 sleep(1)
 
         except KeyboardInterrupt:

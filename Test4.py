@@ -24,7 +24,7 @@ gpio.setup(stepGpio2, gpio.OUT)
 gpio.setup(directionGpio3, gpio.OUT)
 gpio.setup(stepGpio3, gpio.OUT)
 
-gpio.output(directionGpio1, CW)
+gpio.output(directionGpio1, CCW)
 gpio.output(directionGpio2, CW)
 gpio.output(directionGpio3, CW)
 
@@ -39,7 +39,7 @@ for i in range(200):
     sleep(0.005)
 
 sleep(1)
-gpio.output(directionGpio1, CCW)
+gpio.output(directionGpio1, CW)
 gpio.output(directionGpio2, CCW)
 gpio.output(directionGpio3, CCW)
 

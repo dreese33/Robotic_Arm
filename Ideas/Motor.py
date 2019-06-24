@@ -17,7 +17,6 @@ class Motor(object):
         self.stepGpio = stepGpio
         self.directionGpio = directionGpio
         self.identifier = identifier
-        #self.run = False
         self.speed = 0.0
         self.timeUntilRun = 0
         self.direction = 1
@@ -31,4 +30,5 @@ class Motor(object):
             self.direction = 0
             
     def stepMotor():
+        pass
         

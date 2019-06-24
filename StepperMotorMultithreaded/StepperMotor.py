@@ -59,10 +59,6 @@ class StepperMotorMultithreading():
     def startMotor(self, speed):
         self.timer = RepeatedTimer.RepeatedTimer(1 / speed, self.stepMotor)
         
-    #def startMotor(speed, direction):
-        #self.direction = direction
-        #startMotor(speed)
-        
     def stopMotor(self):
         self.timer.stop()
         
