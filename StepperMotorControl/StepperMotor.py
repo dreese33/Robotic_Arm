@@ -15,7 +15,10 @@ class StepperMotor():
     """
     stepGpio: Gpio pin for step
     directionGpio: Gpio pin for direction
-    delaysRemaining: Number of delays until the motors state is set to HIGH
+    stepsTaken: Total steps taken, refreshed after one second or specified time interval
+    totalDelaysBeforeOneSecond: The total number of delays, refreshed after one second or specified time interval
+    stepsFraction: Precalculated so the computer does not have to perform long division more than once
+    delaysFraction: Precalculated so the computer does not have to perform long division more than once
     speed: Speed in steps per second to run the motor
     state: State the motor is currently in from MotorStates
     """
@@ -23,13 +26,21 @@ class StepperMotor():
     def __init__(self, stepGpio, directionGpio):
         self.stepGpio = stepGpio
         self.directionGpio = directionGpio
-        self.delaysRemaining = 0
+        
+        self.totalDelaysBeforeInterval = 0
+        self.stepsTaken = 0
+        self.delayFraction = 0.0
+        self.stepsFraction = 0.0
+        
         self.speed = 0
         self.state = MotorStates.OFF
         
+    #Starts motor, or simply changes its speed if it is already on
     def start(self, speed):
         self.speed = speed
         self.delaysRemaining = 0
+        self.stepsFraction = 1.0 / speed
+        self.delayFraction = 1.0 / 1000.0   #1000 is the one second interval for the motor to run
         
         if (self.state != MotorStates.OFF):
             return
@@ -37,4 +48,14 @@ class StepperMotor():
             self.state = MotorStates.LOW
             
     def restartDelaysRemaining(self):
-        pass
+        self.totalDelaysBeforeInterval = 0
+        self.stepsTaken = 0
+        
+    #This function cannot be called in the high state
+    def stopMotor(self):
+        if (self.state != MotorStates.HIGH):
+            self.state = MotorStates.OFF
+            self.speed = 0
+            restartDelaysRemaining()
+        else:
+            print("Do not call stopMotor() while the motor is in the middle of a step")
