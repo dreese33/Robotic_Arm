@@ -39,7 +39,7 @@ totalDelays = 0
 while True:
     motorNumber = 0
     for motor in motors:
-        if (motor.totalDelaysBeforeInterval == 1000):
+        if (motor.totalDelaysBeforeInterval == motor.interval):
             motor.restartDelaysRemaining()
         if (motor.state == MotorStates.LOW):
             if ((motor.delayFraction * motor.totalDelaysBeforeInterval) >= (motor.stepsFraction * motor.stepsTaken)):
