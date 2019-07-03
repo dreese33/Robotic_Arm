@@ -37,7 +37,6 @@ motors[2].start(10000)
 #Main test loop
 totalDelays = 0
 while True:
-    motorNumber = 0
     for motor in motors:
         if (motor.totalDelaysBeforeInterval == motor.interval):
             motor.restartDelaysRemaining()
@@ -51,6 +50,5 @@ while True:
             gpio.output(motor.stepGpio, gpio.LOW)
             motor.totalDelaysBeforeInterval += 1.0
             motor.state = MotorStates.LOW
-        motorNumber += 1
     sleep(StepperMotor.currentDelay)
     totalDelays += 1

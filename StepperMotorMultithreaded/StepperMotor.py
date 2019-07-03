@@ -19,7 +19,6 @@ class StepperMotorMultithreading():
     
     #Initializer
     def __init__(self, stepGpio, directionGpio, identifier):
-        print("Hi")
         self.stepGpio = stepGpio
         self.directionGpio = directionGpio
         self.identifier = identifier
@@ -31,8 +30,6 @@ class StepperMotorMultithreading():
         self.speed = 0.0
         self.direction = 1
         self.stepsTaken = 0
-        
-        print("Initialized")
     
     #Reverse motor direction
     def reverseDirection(self):
@@ -43,7 +40,6 @@ class StepperMotorMultithreading():
             
     #Step the motor one time
     def stepMotor(self):
-        print("Step")
         gpio.output(self.directionGpio, self.direction)
         gpio.output(self.stepGpio, gpio.HIGH)
         sleep(0.001)

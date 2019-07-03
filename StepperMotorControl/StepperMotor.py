@@ -75,13 +75,19 @@ class StepperMotor():
     @staticmethod
     def runMotorsDegrees(self, motors, degrees):
         degreesToSteps = round(degrees * (5/9))
+        runMotorsSteps(motors, degreesToSteps)
+       
+    #Runs the motors a number of steps
+    #Untested
+    @staticmethod
+    def runMotorsSteps(self, motors, steps):
         if degreesToSteps == 0:
             return
         
         realStepsTaken = []
         
-        if degreesToSteps < 0:
-            degreesToSteps = -degreesToSteps
+        if steps < 0:
+            steps = -steps
             for motor in motors:
                 gpio.output(motor.directionGpio, CCW)
                 motor.restartDelaysRemaining()
@@ -98,7 +104,7 @@ class StepperMotor():
             
             motorNumber = 0
             for motor in motors:
-                if (realStepsTaken[motorNumber] >= degreesToSteps):
+                if (realStepsTaken[motorNumber] >= steps):
                     motors.remove(motor)
                 if (motor.totalDelaysBeforeInterval == motor.interval):
                     motor.restartDelaysRemaining()
@@ -119,22 +125,49 @@ class StepperMotor():
             
         for motor in motors:
             motor.restartDelaysRemaining()
-            
-       
-    #Runs the motors a number of steps
-    #Untested
-    @staticmethod
-    def runMotorsSteps(self, motors, steps):
-        pass
     
     #Runs the motors for a specified time interval in milliseconds
     #Untested
     @staticmethod
     def runMotorsTimeInterval(self, motors, timeInterval):
-        pass
+        if timeInterval <= 0:
+            return
+        
+        for i in range(timeInterval):
+            for motor in motors:
+                if (motor.totalDelaysBeforeInterval == motor.interval):
+                    motor.restartDelaysRemaining()
+                if (motor.state == MotorStates.LOW):
+                    if ((motor.delayFraction * motor.totalDelaysBeforeInterval) >= (motor.stepsFraction * motor.stepsTaken)):
+                        gpio.output(motor.stepGpio, gpio.HIGH)
+                        motor.state = MotorStates.HIGH
+                        motor.stepsTaken += 1.0
+                    motor.totalDelaysBeforeInterval += 1.0
+                elif (motor.state == MotorStates.HIGH):
+                    gpio.output(motor.stepGpio, gpio.LOW)
+                    motor.totalDelaysBeforeInterval += 1.0
+                    motor.state = MotorStates.LOW
+            sleep(StepperMotor.currentDelay)
     
     #Runs the motors for their set interval
     #Untested
     @staticmethod
     def runMotorsInterval(self, motors):
-        pass
+        while True:
+            if len(motors) == 0:
+                break
+            
+            for motor in motors:
+                if motor.totalDelayBeforeInterval == motor.interval:
+                    motors.remove(motor)
+                if (motor.state == MotorStates.LOW):
+                    if ((motor.delayFraction * motor.totalDelaysBeforeInterval) >= (motor.stepsFraction * motor.stepsTaken)):
+                        gpio.output(motor.stepGpio, gpio.HIGH)
+                        motor.state = MotorStates.HIGH
+                        motor.stepsTaken += 1.0
+                    motor.totalDelaysBeforeInterval += 1.0
+                elif (motor.state == MotorStates.HIGH):
+                    gpio.output(motor.stepGpio, gpio.LOW)
+                    motor.totalDelaysBeforeInterval += 1.0
+                    motor.state = MotorStates.LOW
+            sleep(StepperMotor.currentDelay)
