@@ -1,7 +1,11 @@
 from tkinter import *
 from ManualControlWheel import Robot_Manual_Control_Wheel
 from tkinter import ttk
+
+from RoboticArmSimulator import *
 from RoboticArmSimulator import Simulator
+
+from pynput.mouse import Button, Controller, Listener
 
 window = Tk()
 
