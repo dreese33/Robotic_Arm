@@ -4,22 +4,37 @@ from RoboticArmSimulator.Shape import Shape
 
 class Rectangle(Shape):
     
-    def __init__(self, origin, size, canvas, t, color):
-        super(Rectangle, self).__init__(origin, size, canvas, t)
-        if color == '':
+    def __init__(self, origin, size, canvas, t, fillColor = None, borderColor = None):
+        super(Rectangle, self).__init__(origin, size, canvas, t, fillColor, borderColor)
+        self.setOrigin(origin)
+        """
+        if fillColor == None:
             self.draw(origin, size)
         else:
-            self.drawFill(origin, size, color)
+            self.draw(origin, size, fillColor)"""
         
-    def drawFill(self, origin, size, color):
+    def draw(self, origin = None, size = None, fillColor = None, borderColor = None):
+        if origin == None:
+            origin = self.getOrigin()
+            
+        if size == None:
+            size = self.getSize()
+            
+        if fillColor == None:
+            fillColor = self.getFillColor()
+        
         t = self.getTurtle()
+        t.clear()
         t.penup()
-        t.setx(origin.xPos - self.getCanvasSize().width / 2 + size.width)
-        t.sety(origin.yPos - self.getCanvasSize().height / 2 + size.height)
+        t.setx(origin.xPos + size.width)
+        t.sety(origin.yPos)
         t.setheading(270)
         t.pendown()
-        t.fillcolor(color)
-        t.begin_fill()
+        
+        if fillColor != None:
+            t.fillcolor(fillColor)
+            t.begin_fill()
+            
         t.forward(size.height)
         t.left(-90)
         t.forward(size.width)
@@ -27,21 +42,8 @@ class Rectangle(Shape):
         t.forward(size.height)
         t.left(-90)
         t.forward(size.width)
-        t.end_fill()
-        t.penup()
-    
-    def draw(self, origin, size):
-        t = self.getTurtle()
-        t.penup()
-        t.setx(origin.xPos - self.getCanvasSize().width / 2 + size.width)
-        t.sety(origin.yPos - self.getCanvasSize().height / 2 + size.height)
-        t.setheading(270)
-        t.pendown()
-        t.forward(size.height)
-        t.left(-90)
-        t.forward(size.width)
-        t.left(-90)
-        t.forward(size.height)
-        t.left(-90)
-        t.forward(size.width)
+        
+        if fillColor != None:
+            t.end_fill()
+        
         t.penup()

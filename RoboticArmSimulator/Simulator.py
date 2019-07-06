@@ -9,20 +9,6 @@ class Simulator():
     
     """
     Instance variables:
-    width - width of canvas
-    height - height of canvas
-    pvc_width - width of the pipe on the robot
-    elbow_width - width of the elbow
-    shoulder_width - width of shoulder
-    wrist_radius - radius of the wrist joint
-    elbot_radius - radius of the elbow joint
-    shoulder_radius - radius of the shoulder joint
-    
-    Turtles:
-    t - main turtle, Draws coordinate system if necessary
-    wrist_turtle - Draws wrist joint
-    elbow_turtle - Draws elbow joint
-    shoulder_turtle - Draws shoulder joint
     
     Joints:
     wrist - Contains information about the wrist joint
@@ -50,31 +36,31 @@ class Simulator():
         #Draw hand rect
         wrist_turtle = Simulator.setup_turtle(self, canvas)
         pvc_width = (1 / 12) * width
-        hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2), Size(pvc_width * 2, pvc_width), canvas, wrist_turtle, 'gray')
+        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2), Size(pvc_width * 2, pvc_width), canvas, wrist_turtle, 'gray')
         
         #Draw forearm rect
         elbow_turtle = Simulator.setup_turtle(self, canvas)
-        forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, elbow_turtle, 'gray')
+        self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, elbow_turtle, 'gray')
         
         #Draw arm rect
         shoulder_turtle = Simulator.setup_turtle(self, canvas)
-        arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, shoulder_turtle, 'gray')
+        self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, shoulder_turtle, 'gray')
         
         #Draw wrist joint
         wrist_radius = (1 / 20) * width
-        wrist = Circle(Point((6.375 / 30) * width, height / 2 - wrist_radius), wrist_radius, canvas, wrist_turtle, 'red')
+        self.wrist = Circle(Point((4.875 / 30) * width, height / 2 - wrist_radius), wrist_radius, canvas, wrist_turtle, 'red')
         
         #Draw elbow joint
         elbow_radius = (2.25 / 30) * width
-        elbow = Circle(Point((16.375 / 30) * width, height / 2 - elbow_radius), elbow_radius, canvas, elbow_turtle, 'red')
+        self.elbow = Circle(Point((14.125 / 30) * width, height / 2 - elbow_radius), elbow_radius, canvas, elbow_turtle, 'red')
         
         #Draw shoulder joint
         shoulder_radius = (2.25 / 30) * width
-        shoulder = Circle(Point((26.375 / 30) * width, height / 2 - shoulder_radius), shoulder_radius, canvas, shoulder_turtle, 'red')
+        self.shoulder = Circle(Point((24.125 / 30) * width, height / 2 - shoulder_radius), shoulder_radius, canvas, shoulder_turtle, 'red')
         
         #Mouse click/dragged detection
-        canvas.bind("<Button-1>", Simulator.mouse_clicked)
-        canvas.bind("<B1-Motion>", Simulator.mouse_dragged)
+        canvas.bind("<Button-1>", self.mouse_clicked)
+        canvas.bind("<B1-Motion>", self.mouse_dragged)
         
     #Used to find the middle of the screen
     @staticmethod
@@ -103,11 +89,11 @@ class Simulator():
         return t
         
     #Mouse click event
-    @staticmethod
-    def mouse_clicked(event):
+    def mouse_clicked(self, event):
+        self.forearm.setCenter(Point(event.x, event.y))
         print("Clicked at", event.x, event.y)
         
     #Mouse dragged event
-    @staticmethod
-    def mouse_dragged(event):
+    def mouse_dragged(self, event):
+        self.forearm.setOrigin(Point(event.x, event.y))
         print("Dragged to", event.x, event.y)
