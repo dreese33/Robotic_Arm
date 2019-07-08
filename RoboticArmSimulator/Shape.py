@@ -4,9 +4,10 @@ from RoboticArmSimulator.Point import Point
 from RoboticArmSimulator.Size import Size
 import abc
 
-#Requires modification for setter methods to work
-#Based on computer coordinate system primarily (the one used in tkinters Canvas)
-#Also contains conversion to cartesian coordinate system (the one used by turtle)
+
+# Requires modification for setter methods to work
+# Based on computer coordinate system primarily (the one used in tkinters Canvas)
+# Also contains conversion to cartesian coordinate system (the one used by turtle)
 class Shape(object):
     
     """
@@ -47,6 +48,7 @@ class Shape(object):
         self.draw()
         
         self.__test = Shape.setup_turtle(self, self.__masterCanvas)
+        self.__test._tracer(0)
         #self.drawTestShape()
       
     #Getters
@@ -176,7 +178,8 @@ class Shape(object):
     #Setup non animated turtle
     @staticmethod
     def setup_turtle(self, canvas):
-        t = turtle.RawTurtle(canvas)
+        #t = turtle.RawTurtle(canvas)
+        t = turtle.Pen()
         t.speed(0)
         t.hideturtle()
         t.penup()

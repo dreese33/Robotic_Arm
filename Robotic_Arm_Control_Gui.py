@@ -1,66 +1,56 @@
 from tkinter import *
-from ManualControlWheel import Robot_Manual_Control_Wheel
+from ManualControlWheel.ManualControlWheel import ManualControlWheel
 from tkinter import ttk
-
-from RoboticArmSimulator import *
 from RoboticArmSimulator import Simulator
-
-from pynput.mouse import Button, Controller, Listener
 
 window = Tk()
 
-#Screen dimensions
 screen_width = int(window.winfo_screenwidth() / 2)
 screen_height = window.winfo_screenheight()
 
-#Window definition
 window.title("Robotic Arm Control")
 window.geometry(str(screen_width) + "x" + str(screen_height))
 
-#Tabs
-tabControl = ttk.Notebook(window)
+tab_control = ttk.Notebook(window)
 
-manualTab = ttk.Frame(tabControl)
-tabControl.add(manualTab, text='Manual')
+manual_tab = ttk.Frame(tab_control)
+tab_control.add(manual_tab, text='Manual')
 
-programRobotTab = ttk.Frame(tabControl)
-tabControl.add(programRobotTab, text='Program')
+program_robot_tab = ttk.Frame(tab_control)
+tab_control.add(program_robot_tab, text='Program')
 
-armTab = ttk.Frame(tabControl)
-tabControl.add(armTab, text='Arm')
+arm_tab = ttk.Frame(tab_control)
+tab_control.add(arm_tab, text='Arm')
 
-tabControl.pack(expand=1, fill="both")
+tab_control.pack(expand=1, fill="both")
 
-#Test out turtle graphics
-canvasBase = Canvas(master = manualTab, width = int(screen_width / 2), height = int(screen_height / 2))
-canvasBase.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+canvas_base = Canvas(master=manual_tab, width=int(screen_width / 2), height=int(screen_height / 2))
+canvas_base.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 canvas_width = int(screen_width / 6)
 canvas_height = int(screen_height / 6)
 
-canvasWrist = Canvas(master = manualTab, width = canvas_width, height = canvas_height)
-canvasWrist.place(relx = 0.05, rely = 0.05)
+canvas_wrist = Canvas(master=manual_tab, width=canvas_width, height=canvas_height)
+canvas_wrist.place(relx=0.05, rely=0.05)
 
-canvasElbow = Canvas(master = manualTab, width = canvas_width, height = canvas_height)
-canvasElbow.place(relx = 0.78, rely = 0.05)
+canvas_elbow = Canvas(master=manual_tab, width=canvas_width, height=canvas_height)
+canvas_elbow.place(relx=0.78, rely=0.05)
 
-canvasShoulder = Canvas(master = manualTab, width = canvas_width, height = canvas_height)
-canvasShoulder.place(relx = 0.78, rely = 0.78)
+canvas_shoulder = Canvas(master=manual_tab, width=canvas_width, height=canvas_height)
+canvas_shoulder.place(relx=0.78, rely=0.78)
 
-canvasClaw = Canvas(master = manualTab, width = canvas_width, height = canvas_height)
-canvasClaw.place(relx = 0.05, rely = 0.78)
+canvas_claw = Canvas(master=manual_tab, width=canvas_width, height=canvas_height)
+canvas_claw.place(relx=0.05, rely=0.78)
 
-#Draw inner and outer circles for each individual joint
-manualWheelBase = Robot_Manual_Control_Wheel.Robot_Manual_Control_Wheel(canvasBase, 'Base')
-manualWheelWrist = Robot_Manual_Control_Wheel.Robot_Manual_Control_Wheel(canvasWrist, 'Wrist')
-manualWheelElbow = Robot_Manual_Control_Wheel.Robot_Manual_Control_Wheel(canvasElbow, 'Elbow')
-manualWheelShoulder = Robot_Manual_Control_Wheel.Robot_Manual_Control_Wheel(canvasShoulder, 'Shoulder')
-manualWheelClaw = Robot_Manual_Control_Wheel.Robot_Manual_Control_Wheel(canvasClaw, 'Claw')
+# Add manual joint manipulation
+ManualControlWheel(canvas_base, 'Base')
+ManualControlWheel(canvas_wrist, 'Wrist')
+ManualControlWheel(canvas_elbow, 'Elbow')
+ManualControlWheel(canvas_shoulder, 'Shoulder')
+ManualControlWheel(canvas_claw, 'Claw')
 
-#Robotic arm simulator canvas
-simulatorCanvas = Canvas(master = armTab, width = int(screen_width / 1.2), height = int(screen_width / 1.2))
-simulatorCanvas.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-simulator = Simulator.Simulator(simulatorCanvas)
+simulator_canvas = Canvas(master=arm_tab, width=int(screen_width / 1.2), height=int(screen_width / 1.2))
+simulator_canvas.place(relx=0.5, rely=0.5, anchor=CENTER)
+simulator = Simulator.Simulator(simulator_canvas)
 
-#Start
 window.mainloop()

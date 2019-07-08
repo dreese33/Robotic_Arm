@@ -1,8 +1,6 @@
-import turtle
-from tkinter import *
 from RoboticArmSimulator.Shape import Shape
 from RoboticArmSimulator.Size import Size
-from RoboticArmSimulator.Point import Point
+
 
 class Circle(Shape):
         
@@ -29,7 +27,7 @@ class Circle(Shape):
         t = self.getTurtle()
         t.clear()
         t.penup()
-       # t.setx(origin.xPos + self.getSize().width / 2)
+        # t.setx(origin.xPos + self.getSize().width / 2)
         #t.sety(origin.yPos - self.getSize().height)
         t.setx(0)
         t.sety(-self.getSize().height / 2)

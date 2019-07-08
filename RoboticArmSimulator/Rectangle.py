@@ -1,6 +1,5 @@
-import turtle
-from tkinter import *
 from RoboticArmSimulator.Shape import Shape
+
 
 class Rectangle(Shape):
     

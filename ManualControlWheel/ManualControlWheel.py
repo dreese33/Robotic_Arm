@@ -1,7 +1,7 @@
 import turtle
-from tkinter import *
 
-class Robot_Manual_Control_Wheel():
+
+class ManualControlWheel:
     
     def __init__(self, canvas, title):
         t = turtle.RawTurtle(canvas)
@@ -24,16 +24,17 @@ class Robot_Manual_Control_Wheel():
         t.circle(screen_dim_to_use / 2.15)
         t.penup()
         
-        #Detect mouse clicked/dragged
-        canvas.bind("<Button-1>", Robot_Manual_Control_Wheel.mouse_clicked)
-        canvas.bind("<B1-Motion>", Robot_Manual_Control_Wheel.mouse_dragged)
+        # Detect mouse clicked/dragged
+        canvas.bind("<Button-1>", ManualControlWheel.mouse_clicked)
+        canvas.bind("<B1-Motion>", ManualControlWheel.mouse_dragged)
         
-    #Mouse clicked event
+    # Mouse clicked event
     @staticmethod
     def mouse_clicked(event):
         print("Clicked at", event.x, event.y)
         
-    #Mouse dragged event
+    # Mouse dragged event
     @staticmethod
     def mouse_dragged(event):
         print("Dragged to", event.x, event.y)
+

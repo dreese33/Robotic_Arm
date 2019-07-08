@@ -1,4 +1,4 @@
-class Size():
+class Size:
     
     """
     width - width of the shape

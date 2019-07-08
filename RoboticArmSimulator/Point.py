@@ -1,14 +1,14 @@
-class Point():
+class Point:
     
     """
-    xPos - Position of x coordinate
-    yPos - Position of y coorinate
+    x - Position of x coordinate
+    y - Position of y coordinate
     """
     
-    def __init__(self, xPos, yPos):
-        self.xPos = xPos
-        self.yPos = yPos
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
         
-    def move(self, xPos, yPos):
-        self.xPos = xPos
-        self.yPos = yPos
+    def move(self, x, y):
+        self.x = x
+        self.y = y

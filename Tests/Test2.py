@@ -1,61 +1,67 @@
 from time import sleep
 import RPi.GPIO as gpio
-from pynput.keyboard import Controller, Key, Listener
+from pynput.keyboard import Key, Listener
 
-#Pin definitions
-directionLarge = 20  #CW+
-stepLarge = 21      #CLK+
-directionSmall = 12  #CW+
-stepSmall = 16       #CLK+
-CW = 1    #clockwise
-CCW = 0   #counter clockwise
+"""Pin definitions"""
+direction_large = 20  # CW+
+step_large = 21      # CLK+
+direction_small = 12  # CW+
+step_small = 16       # CLK+
+CW = 1    # clockwise
+CCW = 0   # counter clockwise
 
-#Delay increment
-delayIncrement = 0.001
+# Delay increment
+delay_increment = 0.001
 
 gpio.setwarnings(False)
 gpio.setmode(gpio.BCM)
 
-gpio.setup(directionLarge, gpio.OUT)
-gpio.setup(stepLarge, gpio.OUT)
-gpio.setup(directionSmall, gpio.OUT)
-gpio.setup(stepSmall, gpio.OUT)
+gpio.setup(direction_large, gpio.OUT)
+gpio.setup(step_large, gpio.OUT)
+gpio.setup(direction_small, gpio.OUT)
+gpio.setup(step_small, gpio.OUT)
 
-gpio.output(directionLarge, CW)
-gpio.output(directionSmall, CW)
+gpio.output(direction_large, CW)
+gpio.output(direction_small, CW)
+
 
 def on_press(key):
     print(format(key))
-    
-def runRotation():
-    #Moves both motors 200 steps
+
+
+def run_rotation():
+    """Moves both motors 200 steps"""
     for i in range(200):
-        gpio.output(stepLarge, gpio.HIGH)
-        gpio.output(stepSmall, gpio.HIGH)
-        sleep(delayIncrement)
-        gpio.output(stepLarge, gpio.LOW)
-        gpio.output(stepSmall, gpio.LOW)
-        sleep(delayIncrement)
+        gpio.output(step_large, gpio.HIGH)
+        gpio.output(step_small, gpio.HIGH)
+        sleep(delay_increment)
+        gpio.output(step_large, gpio.LOW)
+        gpio.output(step_small, gpio.LOW)
+        sleep(delay_increment)
     sleep(1)
-    
-def runForward():
-    gpio.output(directionLarge, CW)
-    gpio.output(directionSmall, CW)
-    runRotation()
-    
-def runBack():
-    gpio.output(directionLarge, CCW)
-    gpio.output(directionSmall, CCW)
-    runRotation()
-    
+
+
+def run_forward():
+    gpio.output(direction_large, CW)
+    gpio.output(direction_small, CW)
+    run_rotation()
+
+
+def run_back():
+    gpio.output(direction_large, CCW)
+    gpio.output(direction_small, CCW)
+    run_rotation()
+
+
 def on_release(key):
     if key == Key.esc:
         return False
     if key == Key.left:
-        runForward()
+        run_forward()
     if key == Key.right:
-        runBack()
-    
+        run_back()
+
+
 with Listener(
         on_press=on_press,
         on_release=on_release) as listener:
