@@ -9,6 +9,6 @@ class Point:
         self.x = x
         self.y = y
         
-    def move(self, x, y):
+    def set_pos(self, x, y):
         self.x = x
         self.y = y

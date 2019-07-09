@@ -11,171 +11,182 @@ import abc
 class Shape(object):
     
     """
-    __cartesianOrigin - Initial point of shape, stored in cartesian coordinate system
-    __computerOrigin - Initial point of shape, stored in computer coordinate system
+    __cartesian_origin - Initial point of shape, stored in cartesian coordinate system
+    __computer_origin - Initial point of shape, stored in computer coordinate system
     __size - Width and height of shape (width, height)
     __canvas - Canvas shape is being drawn on
-    __masterCanvas - Canvas holding the primary canvas
+    __master_canvas - Canvas holding the primary canvas
     __turtle - Turtle drawing the shape
-    __canvasSize - Size of the canvas
-    __masterCanvasSize - Dimension of the master canvas
-    __fillColor - Color to fill Shape with, no fill if None
-    __borderColor - Color for border of shape
+    __canvas_size - Size of the canvas
+    __master_canvas_size - Dimension of the master canvas
+    __fill_color - Color to fill Shape with, no fill if None
+    __border_color - Color for border of shape
     __test - TEST
     """
     
-    def __init__(self, origin, size, masterCanvas, fillColor = None, borderColor = None):
-        self.__masterCanvas = masterCanvas
-        self.__canvas = Canvas(master = masterCanvas, width = size.width, height = size.height, bd = 0, highlightthickness = 0)
-        self.__canvasSize = Size(int(self.__canvas['width']), int(self.__canvas['height']))
+    def __init__(self, origin, size, master_canvas, fill_color=None, border_color=None):
+        self.__master_canvas = master_canvas
+        self.__canvas = Canvas(master=master_canvas, width=size.width, height=size.height, bd=0, highlightthickness=0)
+        self.__canvas_size = Size(int(self.__canvas['width']), int(self.__canvas['height']))
         
         self.__size = size
-        self.__computerOrigin = origin
+        self.__computer_origin = origin
         
-        if origin.yPos == 0:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, origin.yPos - self.__canvasSize.height / 2)
+        if origin.y == 0:
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            origin.y - self.__canvas_size.height / 2)
         else:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, self.__canvasSize.height / 2 - origin.yPos)
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            self.__canvas_size.height / 2 - origin.y)
         
-        self.__masterCanvasSize = Size(int(masterCanvas['width']), int(masterCanvas['height']))
-        self.__canvas.place(relx = origin.xPos / self.__masterCanvasSize.width, rely = origin.yPos / self.__masterCanvasSize.height)
+        self.__master_canvas_size = Size(int(master_canvas['width']), int(master_canvas['height']))
+        self.__canvas.place(relx=origin.x / self.__master_canvas_size.width,
+                            rely=origin.y / self.__master_canvas_size.height)
         
-        self.__fillColor = fillColor
-        self.__borderColor = borderColor
+        self.__fill_color = fill_color
+        self.__border_color = border_color
         
-        #Setup turtle
+        # Setup turtle
         self.__turtle = Shape.setup_turtle(self, self.__canvas)
         self.draw()
         
-        self.__test = Shape.setup_turtle(self, self.__masterCanvas)
+        self.__test = Shape.setup_turtle(self, self.__master_canvas)
         self.__test._tracer(0)
         #self.drawTestShape()
       
-    #Getters
-    def getTest(self):
+    # Getters
+    def get_test(self):
         return self.__test
     
-    def getMasterCanvasSize(self):
-        return self.__masterCanvasSize
+    def get_master_canvas_size(self):
+        return self.__master_canvas_size
     
-    def getMasterCanvas(self):
-        return self.__masterCanvas
+    def get_master_canvas(self):
+        return self.__master_canvas
         
-    def getCanvasSize(self):
-        return self.__canvasSize
+    def get_canvas_size(self):
+        return self.__canvas_size
     
-    def getCenter(self):
-        return Point(self.__size.width / 2 + self.__computerOrigin.xPos, self.__size.height / 2 + self.__computerOrigin.yPos)
+    def get_center(self):
+        return Point(self.__size.width / 2 + self.__computer_origin.x,
+                     self.__size.height / 2 + self.__computer_origin.y)
     
-    def getCenterCartesian(self):
-        return Point(self.__size.width / 2 + self.__certesianOrigin.xPos, self.__size.height / 2 + self.__cartesianOrigin.yPos)
+    def get_center_cartesian(self):
+        return Point(self.__size.width / 2 + self.__cartesian_origin.x,
+                     self.__size.height / 2 + self.__cartesian_origin.y)
     
-    def getSize(self):
+    def get_size(self):
         return self.__size
     
-    def getOrigin(self):
-        return self.__computerOrigin
+    def get_origin(self):
+        return self.__computer_origin
     
-    def getOriginCartesian(self):
-        return self.__cartesianOrigin
+    def get_origin_cartesian(self):
+        return self.__cartesian_origin
     
-    def getParent(self):
+    def get_parent(self):
         return self.__canvas
     
-    def getTurtle(self):
+    def get_turtle(self):
         return self.__turtle
     
-    def getFillColor(self):
-        return self.__fillColor
+    def get_fill_color(self):
+        return self.__fill_color
     
-    def getBorderColor(self):
-        return self.__borderColor
+    def get_border_color(self):
+        return self.__border_color
     
-    #Setters
-    def setSize(self, size):
+    # Setters
+    def set_size(self, size):
         self.__size = size
         self.draw()
         
-    def setOriginTest(self, origin):
-        self.__computerOrigin = origin
-        if origin.yPos == 0:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, origin.yPos - self.__canvasSize.height / 2)
+    def set_origin_test(self, origin):
+        self.__computer_origin = origin
+        if origin.y == 0:
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            origin.y - self.__canvas_size.height / 2)
         else:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, self.__canvasSize.height / 2 - origin.yPos)
-        self.drawTestShape()
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            self.__canvas_size.height / 2 - origin.y)
+        self.draw_test_shape()
         
-    #Tested
-    def setOrigin(self, origin):
-        self.__computerOrigin = origin
-        if origin.yPos == 0:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, origin.yPos - self.__canvasSize.height / 2)
+    # Tested
+    def set_origin(self, origin):
+        self.__computer_origin = origin
+        if origin.y == 0:
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            origin.y - self.__canvas_size.height / 2)
         else:
-            self.__cartesianOrigin = Point(origin.xPos - self.__canvasSize.width / 2, self.__canvasSize.height / 2 - origin.yPos)
-        self.__canvas.place(relx = origin.xPos / self.__masterCanvasSize.width, rely = origin.yPos / self.__masterCanvasSize.height)
+            self.__cartesian_origin = Point(origin.x - self.__canvas_size.width / 2,
+                                            self.__canvas_size.height / 2 - origin.y)
+        self.__canvas.place(relx=origin.x / self.__master_canvas_size.width,
+                            rely=origin.y / self.__master_canvas_size.height)
         
-    #Tested
-    def setCenter(self, center):
-        originXPos = center.xPos - self.__size.width / 2
-        originYPos = 0
-        if center.yPos >= 0:
-            originYPos = center.yPos - self.__size.height / 2
+    # Tested
+    def set_center(self, center):
+        originx = center.x - self.__size.width / 2
+        if center.y >= 0:
+            originy = center.y - self.__size.height / 2
         else:
-            originYPos = center.yPos + self.__size.height / 2
-        self.setOrigin(Point(originXPos, originYPos))
+            originy = center.y + self.__size.height / 2
+        self.set_origin(Point(originx, originy))
         
-    #Tested
-    def setX(self, xPos):
-        self.__cartesianOrigin = Point(xPos - self.__canvasSize.width / 2, self.__cartesianOrigin.yPos)
-        self.__computerOrigin = Point(xPos, self.__computerOrigin.yPos)
-        self.__canvas.place(relx = self.__computerOrigin.xPos / self.__masterCanvasSize.width, rely = self.__computerOrigin.yPos / self.__masterCanvasSize.height)
+    # Tested
+    def setx(self, x):
+        self.__cartesian_origin = Point(x - self.__canvas_size.width / 2, self.__cartesian_origin.y)
+        self.__computer_origin = Point(x, self.__computer_origin.y)
+        self.__canvas.place(relx=self.__computer_origin.x / self.__master_canvas_size.width,
+                            rely=self.__computer_origin.y / self.__master_canvas_size.height)
         
-    #Tested
-    def setY(self, yPos):
-        self.__computerOrigin = Point(self.__computerOrigin.xPos, yPos)
-        if yPos == 0:
-            self.__cartesianOrigin = Point(self.__cartesianOrigin.xPos, yPos - self.__canvasSize.height / 2)
+    # Tested
+    def sety(self, y):
+        self.__computer_origin = Point(self.__computer_origin.x, y)
+        if y == 0:
+            self.__cartesian_origin = Point(self.__cartesian_origin.x, y - self.__canvas_size.height / 2)
         else:
-            self.__cartesianOrigin = Point(self.__cartesianOrigin.xPos, self.__canvasSize.height / 2 - yPos)
-        self.__canvas.place(relx = self.__computerOrigin.xPos / self.__masterCanvasSize.width, rely = self.__computerOrigin.yPos / self.__masterCanvasSize.height)
+            self.__cartesian_origin = Point(self.__cartesian_origin.x, self.__canvas_size.height / 2 - y)
+        self.__canvas.place(relx=self.__computer_origin.x / self.__master_canvas_size.width,
+                            rely=self.__computer_origin.y / self.__master_canvas_size.height)
         
-    def setWidth(self, width):
+    def set_width(self, width):
         self.__size = Size(width, self.__size.height)
         self.draw()
         
-    def setHeight(self, height):
+    def set_height(self, height):
         self.__size = Size(self.__size.width, height)
         self.draw()
         
-    #Tested
-    def setCenterX(self, xPos):
-        self.__computerOrigin = Point(xPos - self.__size.width / 2, self.__computerOrigin.yPos)
-        self.__cartesianOrigin = Point(xPos - self.__size.width / 2, self.__cartesianOrigin.yPos)
-        self.__canvas.place(relx = self.__computerOrigin.xPos / self.__masterCanvasSize.width, rely = self.__computerOrigin.yPos / self.__masterCanvasSize.height)
+    # Tested
+    def set_center_x(self, x):
+        self.__computer_origin = Point(x - self.__size.width / 2, self.__computer_origin.y)
+        self.__cartesian_origin = Point(x - self.__size.width / 2, self.__cartesian_origin.y)
+        self.__canvas.place(relx=self.__computer_origin.x / self.__master_canvas_size.width,
+                            rely=self.__computer_origin.y / self.__master_canvas_size.height)
         
-    #Tested
-    def setCenterY(self, yPos):
-        originYPos = 0
-        if yPos >= 0:
-            originYPos = yPos - self.__size.height / 2
+    # Tested
+    def set_center_y(self, y):
+        if y >= 0:
+            originy = y - self.__size.height / 2
         else:
-            originYPos = yPos + self.__size.height / 2
+            originy = y + self.__size.height / 2
         
-        computerOrigin = Point(self.__computerOrigin.xPos, originYPos)
-        self.setOrigin(computerOrigin)
+        computer_origin = Point(self.__computer_origin.x, originy)
+        self.set_origin(computer_origin)
         
-    def setFillColor(self, fillColor):
-        self.__fillColor = fillColor
+    def set_fill_color(self, fill_color):
+        self.__fill_color = fill_color
         self.draw()
         
-    def setBorderColor(self, borderColor):
-        self.__borderColor = borderColor
+    def set_border_color(self, border_color):
+        self.__border_color = border_color
         self.draw()
+
+    def reset_shape(self, origin, size):
+        self.set_size(size)
+        self.set_origin(origin)
         
-    def resetShape(self, origin, size):
-        self.setSize(self, size)
-        self.setOrigin(self, origin)
-        
-    #Setup non animated turtle
+    # Setup non animated turtle
     @staticmethod
     def setup_turtle(self, canvas):
         #t = turtle.RawTurtle(canvas)
@@ -185,11 +196,11 @@ class Shape(object):
         t.penup()
         return t
         
-    #Use these to set the values in the setters
+    # Use these to set the values in the setters
     @abc.abstractmethod
     def draw(self):
         return
     
     @abc.abstractmethod
-    def drawTestShape(self):
+    def draw_test_shape(self):
         return

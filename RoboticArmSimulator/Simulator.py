@@ -44,12 +44,15 @@ class Simulator:
         
         # Draw forearm rect
         elbow_turtle = Simulator.setup_turtle(self, canvas)
-        self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, 'gray')
+        self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2),
+                                 Size((1 / 3) * width, pvc_width), canvas, 'gray')
         
         # Draw arm rect
         shoulder_turtle = Simulator.setup_turtle(self, canvas)
-        self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2), Size((1 / 3) * width, pvc_width), canvas, 'gray')
-        self.arm.drawTestShape()
+        self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2),
+                             Size((1 / 3) * width, pvc_width), canvas, 'gray')
+
+        self.arm.draw_test_shape()
         #self.arm.getTest().ondrag(self.mouse_dragged)
         #self.arm.getMasterCanvas().listen()
         
@@ -98,7 +101,7 @@ class Simulator:
     # Mouse click event
     def mouse_clicked(self, event):
         #self.forearm.setOrigin(Point(event.x, event.y))
-        self.arm.setOriginTest(Point(event.x, event.y))
+        self.arm.set_origin_test(Point(event.x, event.y))
         print("Clicked at", event.x, event.y)
         
     # Mouse dragged event
@@ -112,7 +115,7 @@ class Simulator:
         
         if Simulator.screenLock == 1:
             Simulator.screenLock = 0
-            self.arm.setOriginTest(Point(event.x, event.y))
+            self.arm.set_origin_test(Point(event.x, event.y))
             print("Dragged to", event.x, event.y)
             Simulator.screenLock = 1
 

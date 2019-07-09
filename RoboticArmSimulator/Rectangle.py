@@ -3,32 +3,32 @@ from RoboticArmSimulator.Shape import Shape
 
 class Rectangle(Shape):
     
-    def __init__(self, origin, size, masterCanvas, fillColor = None, borderColor = None):
-        super(Rectangle, self).__init__(origin, size, masterCanvas, fillColor, borderColor)
-        self.setOrigin(origin)
+    def __init__(self, origin, size, master_canvas, fill_color=None, border_color=None):
+        super(Rectangle, self).__init__(origin, size, master_canvas, fill_color, border_color)
+        self.set_origin(origin)
         
-    def draw(self, origin = None, size = None, fillColor = None, borderColor = None):
-        t = self.getTurtle()
+    def draw(self, origin=None, size=None, fill_color=None, border_color=None):
+        t = self.get_turtle()
         #t.clear()
         t.clear()
         t.penup()
         
-        if origin == None:
-            origin = self.getOrigin()
+        if origin is None:
+            origin = self.get_origin()
             
-        if size == None:
-            size = self.getSize()
+        if size is None:
+            size = self.get_size()
             
-        if fillColor == None:
-            fillColor = self.getFillColor()
+        if fill_color is None:
+            fill_color = self.get_fill_color()
         
-        t.setx(self.getSize().width / 2)
-        t.sety(self.getSize().height / 2)
+        t.setx(self.get_size().width / 2)
+        t.sety(self.get_size().height / 2)
         t.setheading(270)
         t.pendown()
         
-        if fillColor != None:
-            t.fillcolor(fillColor)
+        if fill_color is not None:
+            t.fillcolor(fill_color)
             t.begin_fill()
             
         t.forward(size.height)
@@ -39,31 +39,31 @@ class Rectangle(Shape):
         t.left(-90)
         t.forward(size.width)
         
-        if fillColor != None:
+        if fill_color is not None:
             t.end_fill()
         
         t.penup()
         
-    def drawTestShape(self, origin = None, size = None, fillColor = None, borderColor = None):
-        t = self.getTest()
+    def draw_test_shape(self, origin=None, size=None, fill_color=None, border_color=None):
+        t = self.get_test()
         t.clear()
         t.penup()
         
-        origin = self.getOriginCartesian()
+        origin = self.get_origin_cartesian()
             
-        if size == None:
-            size = self.getSize()
+        if size is None:
+            size = self.get_size()
             
-        if fillColor == None:
-            fillColor = self.getFillColor()
+        if fill_color is None:
+            fill_color = self.get_fill_color()
         
-        t.setx(origin.xPos)
-        t.sety(origin.yPos + self.getMasterCanvasSize().height / 2 - self.getSize().height / 2)
+        t.setx(origin.x)
+        t.sety(origin.y + self.get_master_canvas_size().height / 2 - self.get_size().height / 2)
         t.setheading(270)
         t.pendown()
         
-        if fillColor != None:
-            t.fillcolor(fillColor)
+        if fill_color is not None:
+            t.fillcolor(fill_color)
             t.begin_fill()
             
         t.forward(size.height)
@@ -74,7 +74,7 @@ class Rectangle(Shape):
         t.left(-90)
         t.forward(size.width)
         
-        if fillColor != None:
+        if fill_color is not None:
             t.end_fill()
         
         t.penup()

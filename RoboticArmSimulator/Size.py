@@ -9,6 +9,6 @@ class Size:
         self.width = width
         self.height = height
     
-    def resize(self, width, height):
+    def set_size(self, width, height):
         self.width = width
         self.height = height
