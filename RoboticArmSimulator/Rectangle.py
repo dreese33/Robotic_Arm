@@ -1,15 +1,14 @@
 from RoboticArmSimulator.Shape import Shape
+from RoboticArmSimulator.Cartesian import Cartesian
 
 
 class Rectangle(Shape):
     
     def __init__(self, origin, size, master_canvas, fill_color=None, border_color=None):
         super(Rectangle, self).__init__(origin, size, master_canvas, fill_color, border_color)
-        self.set_origin(origin)
         
     def draw(self, origin=None, size=None, fill_color=None, border_color=None):
         t = self.get_turtle()
-        #t.clear()
         t.clear()
         t.penup()
         
@@ -21,9 +20,10 @@ class Rectangle(Shape):
             
         if fill_color is None:
             fill_color = self.get_fill_color()
-        
-        t.setx(self.get_size().width / 2)
-        t.sety(self.get_size().height / 2)
+
+        cartesian = Cartesian.computer_to_cartesian(origin, self.get_width(), self.get_master_canvas())
+        t.setx(cartesian.x)
+        t.sety(cartesian.y)
         t.setheading(270)
         t.pendown()
         
@@ -43,7 +43,8 @@ class Rectangle(Shape):
             t.end_fill()
         
         t.penup()
-        
+
+    """
     def draw_test_shape(self, origin=None, size=None, fill_color=None, border_color=None):
         t = self.get_test()
         t.clear()
@@ -78,3 +79,5 @@ class Rectangle(Shape):
             t.end_fill()
         
         t.penup()
+    """
+

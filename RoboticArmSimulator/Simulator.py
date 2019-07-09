@@ -28,7 +28,7 @@ class Simulator:
     def __init__(self, canvas):
         
         # Main turtle
-        t = Simulator.setup_turtle(self, canvas)
+        t = Simulator.setup_turtle(canvas)
         t.pencolor("#000000")
         
         width = int(canvas['width'])
@@ -38,21 +38,22 @@ class Simulator:
         # Simulator.drawPlane(self, width, height, t)
         
         # Draw hand rect
-        wrist_turtle = Simulator.setup_turtle(self, canvas)
+        #wrist_turtle = Simulator.setup_turtle(self, canvas)
         pvc_width = (1 / 12) * width
-        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2), Size(pvc_width * 2, pvc_width), canvas, 'gray')
+        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2), Size(pvc_width * 2, pvc_width),
+                              canvas, 'gray')
         
         # Draw forearm rect
-        elbow_turtle = Simulator.setup_turtle(self, canvas)
+        #elbow_turtle = Simulator.setup_turtle(self, canvas)
         self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2),
                                  Size((1 / 3) * width, pvc_width), canvas, 'gray')
         
         # Draw arm rect
-        shoulder_turtle = Simulator.setup_turtle(self, canvas)
+        #shoulder_turtle = Simulator.setup_turtle(self, canvas)
         self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2),
                              Size((1 / 3) * width, pvc_width), canvas, 'gray')
 
-        self.arm.draw_test_shape()
+        #self.arm.draw_test_shape()
         #self.arm.getTest().ondrag(self.mouse_dragged)
         #self.arm.getMasterCanvas().listen()
         
@@ -66,7 +67,8 @@ class Simulator:
         
         # Draw shoulder joint
         shoulder_radius = (2.25 / 30) * width
-        self.shoulder = Circle(Point((24.125 / 30) * width, height / 2 - shoulder_radius), shoulder_radius, canvas, 'red')
+        self.shoulder = Circle(Point((24.125 / 30) * width, height / 2 - shoulder_radius), shoulder_radius,
+                               canvas, 'red')
         
         # Mouse click/dragged detection
         canvas.bind("<Button-1>", self.mouse_clicked)
@@ -74,7 +76,7 @@ class Simulator:
         
     # Used to find the middle of the screen
     @staticmethod
-    def drawPlane(self, width, height, t):
+    def draw_plane(width, height, t):
         t.penup()
         t.setx(-width / 2)
         t.sety(0)
@@ -91,7 +93,7 @@ class Simulator:
         
     # Setup non animated turtle
     @staticmethod
-    def setup_turtle(self, canvas):
+    def setup_turtle(canvas):
         t = turtle.RawTurtle(canvas)
         t.speed(0)
         t.hideturtle()
@@ -101,7 +103,9 @@ class Simulator:
     # Mouse click event
     def mouse_clicked(self, event):
         #self.forearm.setOrigin(Point(event.x, event.y))
-        self.arm.set_origin_test(Point(event.x, event.y))
+        #self.arm.set_origin_test(Point(event.x, event.y))
+        #self.arm.set_origin(event)
+        self.elbow.set_origin(event)
         print("Clicked at", event.x, event.y)
         
     # Mouse dragged event
@@ -115,7 +119,8 @@ class Simulator:
         
         if Simulator.screenLock == 1:
             Simulator.screenLock = 0
-            self.arm.set_origin_test(Point(event.x, event.y))
+            self.elbow.set_origin(event)
+            #self.arm.set_origin(event)
             print("Dragged to", event.x, event.y)
             Simulator.screenLock = 1
 
