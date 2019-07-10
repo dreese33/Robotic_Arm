@@ -21,7 +21,7 @@ class Simulator:
     hand - Contains information about the hand
     
     Class variables:
-    draggedCounter - number of times mouse dragged before invoking the draw method
+    screenLock - Prevents stack overflow from occurring due to too many mouse_dragged calls
     """
     screenLock = 1
     
@@ -38,24 +38,17 @@ class Simulator:
         # Simulator.drawPlane(self, width, height, t)
         
         # Draw hand rect
-        #wrist_turtle = Simulator.setup_turtle(self, canvas)
         pvc_width = (1 / 12) * width
-        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2), Size(pvc_width * 2, pvc_width),
-                              canvas, 'gray')
-        
+        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2),
+                              Size((1 / 6) * width, pvc_width), canvas, 'gray')
+
         # Draw forearm rect
-        #elbow_turtle = Simulator.setup_turtle(self, canvas)
         self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2),
                                  Size((1 / 3) * width, pvc_width), canvas, 'gray')
-        
+
         # Draw arm rect
-        #shoulder_turtle = Simulator.setup_turtle(self, canvas)
         self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2),
                              Size((1 / 3) * width, pvc_width), canvas, 'gray')
-
-        #self.arm.draw_test_shape()
-        #self.arm.getTest().ondrag(self.mouse_dragged)
-        #self.arm.getMasterCanvas().listen()
         
         # Draw wrist joint
         wrist_radius = (1 / 20) * width
@@ -69,7 +62,7 @@ class Simulator:
         shoulder_radius = (2.25 / 30) * width
         self.shoulder = Circle(Point((24.125 / 30) * width, height / 2 - shoulder_radius), shoulder_radius,
                                canvas, 'red')
-        
+
         # Mouse click/dragged detection
         canvas.bind("<Button-1>", self.mouse_clicked)
         canvas.bind("<B1-Motion>", self.mouse_dragged)
@@ -102,25 +95,11 @@ class Simulator:
         
     # Mouse click event
     def mouse_clicked(self, event):
-        #self.forearm.setOrigin(Point(event.x, event.y))
-        #self.arm.set_origin_test(Point(event.x, event.y))
-        #self.arm.set_origin(event)
-        self.elbow.set_origin(event)
         print("Clicked at", event.x, event.y)
         
     # Mouse dragged event
     def mouse_dragged(self, event):
-        """
-        print("Dragged")
-        t = self.arm.getTest().ondrag(None)
-        print("Dragged")
-        self.arm.setOriginTest(Point(x, y))
-        t.ondrag(self.mouse_dragged)"""
-        
         if Simulator.screenLock == 1:
             Simulator.screenLock = 0
-            self.elbow.set_origin(event)
-            #self.arm.set_origin(event)
             print("Dragged to", event.x, event.y)
             Simulator.screenLock = 1
-

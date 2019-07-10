@@ -37,4 +37,3 @@ class ManualControlWheel:
     @staticmethod
     def mouse_dragged(event):
         print("Dragged to", event.x, event.y)
-

@@ -28,9 +28,8 @@ class Circle(Shape):
         t = self.get_turtle()
         t.clear()
         t.penup()
-        # t.setx(origin.xPos + self.getSize().width / 2)
-        #t.sety(origin.yPos - self.getSize().height)
-        cartesian = Cartesian.computer_to_cartesian(origin, self.get_width(), self.get_master_canvas())
+
+        cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
         t.setx(cartesian.x + self.get_width() / 2)
         t.sety(cartesian.y - self.get_height())
 
@@ -56,32 +55,3 @@ class Circle(Shape):
     def set_size(self, radius):
         self.__radius = radius
         super(Circle, self).set_size(Size(radius * 2, radius * 2))
-    """
-    def draw_test_shape(self, radius=None, fill_color=None):
-        t = self.get_test()
-        t.clear()
-        t.penup()
-        origin = self.get_origin_cartesian()
-            
-        if radius is None:
-            radius = self.get_radius()
-            
-        if fill_color is None:
-            fill_color = self.get_fill_color()
-
-        t.setx(origin.x)
-        t.sety(origin.y)
-            
-        t.pendown()
-        
-        if fill_color is not None:
-            t.fillcolor(fill_color)
-            t.begin_fill()
-            
-        t.circle(radius)
-        
-        if fill_color is not None:
-            t.end_fill()
-        
-        t.penup()
-    """
