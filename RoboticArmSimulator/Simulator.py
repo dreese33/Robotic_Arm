@@ -24,6 +24,7 @@ class Simulator:
     screenLock - Prevents stack overflow from occurring due to too many mouse_dragged calls
     """
     screenLock = 1
+    rotating = False
     
     def __init__(self, canvas):
         
@@ -99,12 +100,12 @@ class Simulator:
         print("Origin at", self.arm.getx(), self.arm.gety())
         print("Size of", self.arm.get_width(), self.arm.get_height())
         print("\n")
-        if self.elbow.contains(event):
-            print('contains')
+        self.arm.rotate(1)
         
     # Mouse dragged event
     def mouse_dragged(self, event):
         if Simulator.screenLock == 1:
             Simulator.screenLock = 0
             print("Dragged to", event.x, event.y)
+            self.arm.rotate(3)
             Simulator.screenLock = 1

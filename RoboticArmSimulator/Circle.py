@@ -1,7 +1,7 @@
 from RoboticArmSimulator.Shape import Shape
 from RoboticArmSimulator.Size import Size
 from RoboticArmSimulator.Cartesian import Cartesian
-import math
+from RoboticArmSimulator.Point import Point
 
 
 class Circle(Shape):
@@ -58,7 +58,7 @@ class Circle(Shape):
         super(Circle, self).set_size(Size(radius * 2, radius * 2))
 
     def contains(self, point):
-        distance = math.sqrt((point.x - self.get_center().x) ** 2 + (point.y - self.get_center().y) ** 2)
+        distance = Point.distance(point, self.get_center())
         if distance <= self.__radius:
             return True
 

@@ -63,7 +63,7 @@ class Shape(object):
 
     def get_master_canvas(self):
         return self.__master_canvas
-    
+
     # Setters
     def setx(self, x):
         self.__origin = Point(x, self.__origin.y)
@@ -125,7 +125,7 @@ class Shape(object):
         t.hideturtle()
         t.penup()
         return t
-        
+
     # Use these to set the values in the setters
     @abc.abstractmethod
     def draw(self):
