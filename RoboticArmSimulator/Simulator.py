@@ -31,8 +31,8 @@ class Simulator:
         t = Simulator.setup_turtle(canvas)
         t.pencolor("#000000")
         
-        width = int(canvas['width'])
-        height = int(canvas['height'])
+        width = float(canvas['width'])
+        height = float(canvas['height'])
         
         # Drawing coordinates, uncomment to use
         # Simulator.drawPlane(self, width, height, t)
@@ -47,7 +47,7 @@ class Simulator:
                                  Size((1 / 3) * width, pvc_width), canvas, 'gray')
 
         # Draw arm rect
-        self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2),
+        self.arm = Rectangle(Point((16.375 / 30) * width, 100),
                              Size((1 / 3) * width, pvc_width), canvas, 'gray')
         
         # Draw wrist joint
@@ -96,6 +96,11 @@ class Simulator:
     # Mouse click event
     def mouse_clicked(self, event):
         print("Clicked at", event.x, event.y)
+        print("Origin at", self.arm.getx(), self.arm.gety())
+        print("Size of", self.arm.get_width(), self.arm.get_height())
+        print("\n")
+        if self.arm.contains(event):
+            print('contains')
         
     # Mouse dragged event
     def mouse_dragged(self, event):

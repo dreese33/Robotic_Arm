@@ -22,9 +22,10 @@ class Rectangle(Shape):
         t.penup()
 
         cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
-        t.setx(cartesian.x + self.get_width())
-        t.sety(cartesian.y)
+        t.setx(cartesian.x + self.get_width() - 3)
+        t.sety(cartesian.y + 6)
         print("Coord:" + " x: " + str(cartesian.x) + " y: " + str(cartesian.y))
+        print(self.get_turtle().turtlesize()[0])
         t.setheading(270)
 
         t.pendown()
@@ -45,3 +46,10 @@ class Rectangle(Shape):
             t.end_fill()
         
         t.penup()
+
+    def contains(self, point):
+        corners = self.get_frame_corners()
+        if corners[0].x <= point.x <= corners[1].x and corners[0].y <= point.y <= corners[3].y:
+            return True
+
+        return False

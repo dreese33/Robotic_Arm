@@ -6,9 +6,5 @@ class Size:
     """
     
     def __init__(self, width, height):
-        self.width = width
-        self.height = height
-    
-    def set_size(self, width, height):
-        self.width = width
-        self.height = height
+        self.width = int(width)
+        self.height = int(height)

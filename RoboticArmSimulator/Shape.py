@@ -111,6 +111,11 @@ class Shape(object):
         self.__center = center
         self.draw()
 
+    def get_frame_corners(self) -> []:
+        return [self.__origin, Point(self.__origin.x + self.__size.width, self.__origin.y),
+                Point(self.__origin.x + self.__size.width, self.__origin.y + self.__size.height),
+                Point(self.__origin.x, self.__origin.y + self.__size.height)]
+
     # Setup non animated turtle
     @staticmethod
     def setup_turtle(master_canvas):
@@ -125,3 +130,8 @@ class Shape(object):
     @abc.abstractmethod
     def draw(self):
         return
+
+    # Does the shape contain the specified point
+    @abc.abstractmethod
+    def contains(self, point) -> bool:
+        return False
