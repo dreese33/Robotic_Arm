@@ -1,6 +1,7 @@
 from RoboticArmSimulator.Shape import Shape
 from RoboticArmSimulator.Size import Size
 from RoboticArmSimulator.Cartesian import Cartesian
+import math
 
 
 class Circle(Shape):
@@ -30,8 +31,8 @@ class Circle(Shape):
         t.penup()
 
         cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
-        t.setx(cartesian.x + self.get_width() / 2)
-        t.sety(cartesian.y - self.get_height())
+        t.setx(cartesian.x + self.get_width() / 2 - 3)
+        t.sety(cartesian.y - self.get_height() + 5)
 
         t.pendown()
         
@@ -55,3 +56,10 @@ class Circle(Shape):
     def set_size(self, radius):
         self.__radius = radius
         super(Circle, self).set_size(Size(radius * 2, radius * 2))
+
+    def contains(self, point):
+        distance = math.sqrt((point.x - self.get_center().x) ** 2 + (point.y - self.get_center().y) ** 2)
+        if distance <= self.__radius:
+            return True
+
+        return False

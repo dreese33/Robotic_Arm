@@ -23,9 +23,7 @@ class Rectangle(Shape):
 
         cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
         t.setx(cartesian.x + self.get_width() - 3)
-        t.sety(cartesian.y + 6)
-        print("Coord:" + " x: " + str(cartesian.x) + " y: " + str(cartesian.y))
-        print(self.get_turtle().turtlesize()[0])
+        t.sety(cartesian.y + 5)
         t.setheading(270)
 
         t.pendown()
