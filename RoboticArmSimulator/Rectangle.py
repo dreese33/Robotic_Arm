@@ -10,7 +10,6 @@ class Rectangle(Shape):
     """
 
     def __init__(self, origin, size, master_canvas, fill_color=None, border_color=None):
-        self.__rotation = 0
         super(Rectangle, self).__init__(origin, size, master_canvas, fill_color, border_color)
         
     def draw(self, origin=None, size=None, rotation=None, fill_color=None):
@@ -31,9 +30,9 @@ class Rectangle(Shape):
         t.penup()
 
         cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
+        print("Rectangle: ", cartesian.x, cartesian.y)
         t.setx(cartesian.x - 3)
         t.sety(cartesian.y + 5)
-        print(str(rotation))
         t.setheading(270 + rotation)
 
         t.pendown()
@@ -61,14 +60,3 @@ class Rectangle(Shape):
             return True
 
         return False
-
-    def get_rotation(self):
-        return self.__rotation
-
-    # Rotates around origin of rectangle
-    def rotate(self, degrees):
-        self.__rotation += degrees
-        if self.__rotation >= 360:
-            self.__rotation -= 360
-
-        self.draw()

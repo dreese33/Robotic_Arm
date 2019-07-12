@@ -98,14 +98,16 @@ class Simulator:
     def mouse_clicked(self, event):
         print("Clicked at", event.x, event.y)
         print("Origin at", self.arm.getx(), self.arm.gety())
+        print("Center at", self.arm.get_center().x, self.arm.get_center().y)
         print("Size of", self.arm.get_width(), self.arm.get_height())
         print("\n")
-        self.arm.rotate(1)
+        self.forearm.rotate_center(5)
         
     # Mouse dragged event
     def mouse_dragged(self, event):
         if Simulator.screenLock == 1:
             Simulator.screenLock = 0
-            print("Dragged to", event.x, event.y)
-            self.arm.rotate(3)
+            print("\n")
+            #print("Dragged to", event.x, event.y)
+            self.forearm.rotate_center(50)
             Simulator.screenLock = 1
