@@ -1,5 +1,5 @@
-from RoboticArmSimulator.Shape import Shape
-from RoboticArmSimulator.Cartesian import Cartesian
+from Ideas.shapes.Shape import Shape
+from Ideas.shapes.Cartesian import Cartesian
 
 
 class Rectangle(Shape):
@@ -30,10 +30,10 @@ class Rectangle(Shape):
         t.penup()
 
         cartesian = Cartesian.computer_to_cartesian(origin, self.get_master_canvas())
-        print("Rectangle: ", cartesian.x, cartesian.y)
         t.setx(cartesian.x - 3)
         t.sety(cartesian.y + 5)
-        t.setheading(270 + rotation)
+
+        t.setheading(270 - rotation)
 
         t.pendown()
         

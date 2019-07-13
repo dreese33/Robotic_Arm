@@ -1,8 +1,8 @@
 import turtle
-from RoboticArmSimulator.Circle import Circle
-from RoboticArmSimulator.Rectangle import Rectangle
-from RoboticArmSimulator.Point import Point
-from RoboticArmSimulator.Size import Size
+from Ideas.shapes.Circle import Circle
+from Ideas.shapes.Rectangle import Rectangle
+from Ideas.shapes.Point import Point
+from Ideas.shapes.Size import Size
 
 
 class Simulator:
@@ -96,12 +96,12 @@ class Simulator:
         
     # Mouse click event
     def mouse_clicked(self, event):
-        print("Clicked at", event.x, event.y)
-        print("Origin at", self.arm.getx(), self.arm.gety())
-        print("Center at", self.arm.get_center().x, self.arm.get_center().y)
-        print("Size of", self.arm.get_width(), self.arm.get_height())
+        #print("Clicked at", event.x, event.y)
+        #print("Origin at", self.arm.getx(), self.arm.gety())
+        #print("Center at", self.arm.get_center().x, self.arm.get_center().y)
+        #print("Size of", self.arm.get_width(), self.arm.get_height())
         print("\n")
-        self.forearm.rotate_center(5)
+        self.arm.rotate_center(10)
         
     # Mouse dragged event
     def mouse_dragged(self, event):
@@ -109,5 +109,5 @@ class Simulator:
             Simulator.screenLock = 0
             print("\n")
             #print("Dragged to", event.x, event.y)
-            self.forearm.rotate_center(50)
+            self.arm.rotate_center(10)
             Simulator.screenLock = 1

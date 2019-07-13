@@ -1,7 +1,7 @@
-from RoboticArmSimulator.Shape import Shape
-from RoboticArmSimulator.Size import Size
-from RoboticArmSimulator.Cartesian import Cartesian
-from RoboticArmSimulator.Point import Point
+from Ideas.shapes.Shape import Shape
+from Ideas.shapes.Size import Size
+from Ideas.shapes.Cartesian import Cartesian
+from Ideas.shapes.Point import Point
 
 
 class Circle(Shape):

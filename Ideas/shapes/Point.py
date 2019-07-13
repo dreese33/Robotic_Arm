@@ -9,8 +9,8 @@ class Point:
     """
     
     def __init__(self, x, y):
-        self.x = int(x)
-        self.y = int(y)
+        self.x = x
+        self.y = y
 
     @staticmethod
     def distance(p1, p2):

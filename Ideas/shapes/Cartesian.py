@@ -1,4 +1,4 @@
-from RoboticArmSimulator.Point import Point
+from Ideas.shapes.Point import Point
 
 
 class Cartesian:
