@@ -1,10 +1,9 @@
 from tkinter import *
 from ManualControlWheel.ManualControlWheel import ManualControlWheel
-
 from tkinter import ttk
-import tkinter as tk
+from RoboticArmSimulator.Simulator import Simulator
 
-from RoboticArmSimulator import Simulator
+
 window = Tk()
 
 screen_width = int(window.winfo_screenwidth() / 2)
@@ -23,9 +22,6 @@ tab_control.add(manual_tab, text='Manual')
 
 program_robot_tab = ttk.Frame(tab_control)
 tab_control.add(program_robot_tab, text='Program')
-
-#arm_tab = ttk.Frame(tab_control)
-#tab_control.add(arm_tab, text='Arm')
 
 tab_control.pack(expand=1, fill="both")
 
@@ -54,12 +50,6 @@ ManualControlWheel(canvas_elbow, 'Elbow')
 ManualControlWheel(canvas_shoulder, 'Shoulder')
 ManualControlWheel(canvas_claw, 'Claw')
 
-#simulator_canvas = Canvas(master=arm_tab, width=int(screen_width / 1.2), height=int(screen_width / 1.2))
-#simulator_canvas.place(relx=0.5, rely=0.5, anchor=CENTER)
-#simulator = Simulator.Simulator(simulator_canvas)
-Simulator.interfile_master_canvas_size = (screen_width, screen_height)
-
-print("Siml")
-simulator = Simulator.Simulator()
+Simulator()
 
 window.mainloop()

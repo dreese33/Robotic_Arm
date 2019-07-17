@@ -1,19 +1,14 @@
-import turtle
 import math
-import tkinter as tk
-import ctypes
-
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib import animation
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
 
-
+"""
 class Simulator(tk.Tk):
     
-    """
+    com
     Instance variables:
     
     Joints:
@@ -28,43 +23,18 @@ class Simulator(tk.Tk):
     
     Class variables:
     screenLock - Prevents stack overflow from occurring due to too many mouse_dragged calls
-    """
+    com
     screenLock = 1
     rotating = False
-    interfile_master_canvas_size = (0, 0)
 
     def init(self):
         pass
 
-    def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-        #tk.Tk.wm_title(self, "Sea of BTC client")
+    def __init__(self):
 
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        GraphSimulator()
 
-        self.frames = {}
-
-        frame = PageThree()
-
-        self.frames[PageThree] = frame
-        frame.grid(row=0, column=0, sticky="nsew")
-
-        #frame.canvas.mpl_connect('button_press_event', self.mouse_clicked)
-
-        self.show_frame(PageThree)
-        frame.canvas.get_tk_widget().focus_force()
-        print("Working")
-
-    def show_frame(self, cont):
-        frame = self.frames[cont]
-        frame.tkraise()
-
-    def mouse_clicked(self, event):
-        print("You pressed: ", event.x, event.y)
-    """
+    com
     def __init__(self, canvas):
         
         # Main turtle
@@ -114,79 +84,92 @@ class Simulator(tk.Tk):
         canvas.bind("<Button-1>", self.mouse_clicked)
         canvas.bind("<B1-Motion>", self.mouse_dragged)"""
 
-    # Used to find the middle of the screen
-    @staticmethod
-    def draw_plane(width, height, t):
-        t.penup()
-        t.setx(-width / 2)
-        t.sety(0)
-        t.pendown()
-        t.forward(width)
-        t.penup()
-        t.setx(0)
-        t.sety(-height / 2)
-        t.left(90)
-        t.pendown()
-        t.forward(height)
-        t.right(90)
-        t.penup()
-        
-    # Setup non animated turtle
-    @staticmethod
-    def setup_turtle(canvas):
-        t = turtle.RawTurtle(canvas)
-        t._tracer(0)
-        t.speed(0)
-        t.hideturtle()
-        t.penup()
-        return t
+
+class Simulator:
 
     """
-    # Mouse click event
-    def mouse_clicked(self, event):
-        #print("Clicked at", event.x, event.y)
-        #print("Origin at", self.arm.getx(), self.arm.gety())
-        #print("Center at", self.arm.get_center().x, self.arm.get_center().y)
-        #print("Size of", self.arm.get_width(), self.arm.get_height())
-        print("Clicked: ", event.x, event.y)
-        print("\n")
-        #self.arm.rotate_center(10)"""
-        
-    # Mouse dragged event
-    def mouse_dragged(self, event):
-        if Simulator.screenLock == 1:
-            Simulator.screenLock = 0
-            print("\n")
-            #print("Dragged to", event.x, event.y)
-            #self.arm.rotate_center(10)
-            #self.canvas.move(self.oval, event.x, event.y)
-            Simulator.screenLock = 1
+    Class Variables:
 
+    left_pressed - Left mouse button is pressed
+    running - Determines whether or not to start a new Simulator
+    simulator_plot_width - The width of the Simulator pyplot axis
 
-class PageThree:
+    Instance Variables:
+
+    Joints:
+    wrist - Wrist of the arm
+    elbow - Elbow of the arm
+    shoulder - Rotating base portion of the arm, the shoulder
+
+    Limbs:
+    hand - Grabber portion of the arm
+    forearm - Middle portion of the arm. Attaches wrist to elbow.
+    arm - Last segment of the arm. Attaches elbow to shoulder.
+    """
+
+    left_pressed = False
+    running = False
+    simulator_plot_width = 1000
 
     def __init__(self):
-        plt.figure(num='Robotic Arm Simulator', figsize=(5, 5)).canvas.mpl_connect('button_press_event', self.mouse_clicked)
-        plt.title('Simulator')
 
-        # Shapes
-        self.circle = plt.Circle((100, 100), radius=150, fc='r')
-        plt.gca().add_patch(self.circle)
+        if not Simulator.running:
+            Simulator.running = True
 
-        circle1 = plt.Circle((0, 0), radius=100, fc='r')
-        plt.gca().add_patch(circle1)
+            quadrant_width = Simulator.simulator_plot_width / 2
 
-        circle2 = plt.Circle((-100, -200), radius=100, fc='r')
-        plt.gca().add_patch(circle2)
+            figure = plt.figure(num='Robotic Arm Simulator', figsize=(5, 5))
+            figure.canvas.mpl_connect('button_press_event', self.mouse_clicked)
+            figure.canvas.mpl_connect('button_release_event', Simulator.mouse_released)
+            figure.canvas.mpl_connect('close_event', Simulator.handle_close)
 
-        plt.axis([-500, 500, -500, 500])
+            plt.title('Simulator')
 
-        plt.show()
+            # Shapes
+            wrist_radius = (1 / 20) * Simulator.simulator_plot_width
+            elbow_radius = (4.5 / 60) * Simulator.simulator_plot_width     # Same as shoulder radius
+            pvc_height = (2.5 / 30) * Simulator.simulator_plot_width
+
+            hand_width = (1 / 6) * Simulator.simulator_plot_width
+            forearm_width = (1 / 3) * Simulator.simulator_plot_width       # Same as arm width
+
+            self.wrist = plt.Circle((0, 0), radius=wrist_radius, fc='r')
+            plt.gca().add_patch(self.wrist)
+
+            self.elbow = plt.Circle((200, 10), radius=elbow_radius, fc='r')
+            plt.gca().add_patch(self.elbow)
+
+            self.shoulder = plt.Circle((-100, -200), radius=elbow_radius, fc='r')
+            plt.gca().add_patch(self.shoulder)
+
+            self.hand = plt.Rectangle((0, 200), height=pvc_height, width=hand_width, fc='gray')
+            plt.gca().add_patch(self.hand)
+
+            self.forearm = plt.Rectangle((100, 300), height=pvc_height, width=forearm_width, fc='gray')
+            plt.gca().add_patch(self.forearm)
+
+            self.arm = plt.Rectangle((100, 400), height=pvc_height, width=forearm_width, fc='gray')
+            plt.gca().add_patch(self.arm)
+
+            plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
+
+            plt.show()
 
     def mouse_clicked(self, event):
+        Simulator.left_pressed = True
         print("You pressed: ", event.x, event.y)
-        self.circle.center = PageThree.rotate((0, 0), self.circle.get_center(), 0.1)
+        self.wrist.center = Simulator.rotate((100, 0), self.wrist.get_center(), 0.1)
         plt.gca().figure.canvas.draw()
+
+    @staticmethod
+    def mouse_released(event):
+        Simulator.left_pressed = False
+        print("Released at: ", event.x, event.y)
+
+    @staticmethod
+    def handle_close(event):
+        Simulator.running = False
+        print("Closing")
 
 
     # https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
