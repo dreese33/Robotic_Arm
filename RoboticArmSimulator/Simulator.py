@@ -5,85 +5,6 @@ import matplotlib
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
 
-"""
-class Simulator(tk.Tk):
-    
-    com
-    Instance variables:
-    
-    Joints:
-    wrist - Contains information about the wrist joint
-    elbow - Contains information about the elbow joint
-    shoulder - Contains information about the shoulder joint
-    
-    Limbs:
-    forearm - Contains information about the forearm
-    arm - Contains information about the arm
-    hand - Contains information about the hand
-    
-    Class variables:
-    screenLock - Prevents stack overflow from occurring due to too many mouse_dragged calls
-    com
-    screenLock = 1
-    rotating = False
-
-    def init(self):
-        pass
-
-    def __init__(self):
-
-        GraphSimulator()
-
-    com
-    def __init__(self, canvas):
-        
-        # Main turtle
-        #t = Simulator.setup_turtle(canvas)
-        #t.pencolor("#000000")
-        
-        width = int(canvas['width'])
-        height = int(canvas['height'])
-        
-        # Drawing coordinates, uncomment to use
-        # Simulator.draw_plane(width, height, t)
-        #canvas.create_rectangle(30, 10, 120, 80,
-        #    outline="#fb0", fill="#ab1")
-        #self.canvas = canvas
-        #self.oval = canvas.create_oval(10, 10, 80, 80, outline="#f11", fill="#1f1", width=2)
-
-
-        
-        # Draw hand rect
-        pvc_width = (1 / 12) * width
-        self.hand = Rectangle(Point((1.375 / 30) * width, height / 2 - pvc_width / 2),
-                              Size((1 / 6) * width, pvc_width), canvas, 'gray')
-
-        # Draw forearm rect
-        self.forearm = Rectangle(Point((6.375 / 30) * width, height / 2 - pvc_width / 2),
-                                 Size((1 / 3) * width, pvc_width), canvas, 'gray')
-
-        # Draw arm rect
-        self.arm = Rectangle(Point((16.375 / 30) * width, height / 2 - pvc_width / 2),
-                             Size((1 / 3) * width, pvc_width), canvas, 'gray')
-        
-        # Draw wrist joint
-        wrist_radius = (1 / 20) * width
-        self.wrist = Circle(Point((4.875 / 30) * width, height / 2 - wrist_radius), wrist_radius, canvas, 'red')
-        
-        # Draw elbow joint
-        elbow_radius = (2.25 / 30) * width
-        self.elbow = Circle(Point((14.125 / 30) * width, height / 2 - elbow_radius), elbow_radius, canvas, 'red')
-        
-        # Draw shoulder joint
-        shoulder_radius = (2.25 / 30) * width
-        self.shoulder = Circle(Point((24.125 / 30) * width, height / 2 - shoulder_radius), shoulder_radius,
-                               canvas, 'red')
-        
-
-        # Mouse click/dragged detection
-        canvas.bind("<Button-1>", self.mouse_clicked)
-        canvas.bind("<B1-Motion>", self.mouse_dragged)"""
-
 
 class Simulator:
 
@@ -103,13 +24,20 @@ class Simulator:
 
     Limbs:
     hand - Grabber portion of the arm
-    forearm - Middle portion of the arm. Attaches wrist to elbow.
-    arm - Last segment of the arm. Attaches elbow to shoulder.
+    forearm - Middle portion of the arm. Attaches wrist to elbow
+    arm - Last segment of the arm. Attaches elbow to shoulder
+
+    Limb Sizes:
+    pvc_height - Height of all of the limbs
+    hand_width - Width of the hand
+    forearm_width - Width of the forearm and arm
     """
 
     left_pressed = False
     running = False
     simulator_plot_width = 1000
+    arm_limbs = []
+    arm_joints = []
 
     def __init__(self):
 
@@ -126,39 +54,63 @@ class Simulator:
             plt.title('Simulator')
 
             # Shapes
-            wrist_radius = (1 / 20) * Simulator.simulator_plot_width
-            elbow_radius = (4.5 / 60) * Simulator.simulator_plot_width     # Same as shoulder radius
-            pvc_height = (2.5 / 30) * Simulator.simulator_plot_width
+            wrist_radius = (1 / 40) * Simulator.simulator_plot_width
+            elbow_radius = (4.5 / 120) * Simulator.simulator_plot_width     # Same as shoulder radius
 
-            hand_width = (1 / 6) * Simulator.simulator_plot_width
-            forearm_width = (1 / 3) * Simulator.simulator_plot_width       # Same as arm width
+            self.pvc_height = (2.5 / 60) * Simulator.simulator_plot_width
+            self.hand_width = (1 / 12) * Simulator.simulator_plot_width
+            self.forearm_width = (1 / 6) * Simulator.simulator_plot_width       # Same as arm width
 
-            self.wrist = plt.Circle((0, 0), radius=wrist_radius, fc='r')
-            plt.gca().add_patch(self.wrist)
+            wrist_center = (150, 100)
+            elbow_center = (200, 10)
+            shoulder_center = (-100, -200)
 
-            self.elbow = plt.Circle((200, 10), radius=elbow_radius, fc='r')
-            plt.gca().add_patch(self.elbow)
-
-            self.shoulder = plt.Circle((-100, -200), radius=elbow_radius, fc='r')
-            plt.gca().add_patch(self.shoulder)
-
-            self.hand = plt.Rectangle((0, 200), height=pvc_height, width=hand_width, fc='gray')
+            # Limbs should be behind the joints
+            self.hand = self._default_limb(self.hand_width)
             plt.gca().add_patch(self.hand)
 
-            self.forearm = plt.Rectangle((100, 300), height=pvc_height, width=forearm_width, fc='gray')
+            self.forearm = self._default_limb(self.forearm_width)
             plt.gca().add_patch(self.forearm)
 
-            self.arm = plt.Rectangle((100, 400), height=pvc_height, width=forearm_width, fc='gray')
+            self.arm = self._default_limb(self.forearm_width)
             plt.gca().add_patch(self.arm)
+
+            # Joints
+            self.wrist = Simulator._add_joint(wrist_center, wrist_radius, 'r')
+            plt.gca().add_patch(self.wrist)
+
+            self.elbow = Simulator._add_joint(elbow_center, elbow_radius, 'r')
+            plt.gca().add_patch(self.elbow)
+
+            self.shoulder = Simulator._add_joint(shoulder_center, elbow_radius, 'r')
+            plt.gca().add_patch(self.shoulder)
+
+            self._update_limb_positions()
 
             plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
 
             plt.show()
 
+    def _get_limb_origin(self, joint, limb_width):
+        return joint.center[0] - limb_width, joint.center[1] - self.pvc_height / 2
+
+    def _default_limb(self, width):
+        return plt.Rectangle((0, 0), height=self.pvc_height, width=width, fc='gray')
+
+    @staticmethod
+    def _add_joint(center, radius, color_str):
+        return plt.Circle(center, radius=radius, fc=color_str)
+
     def mouse_clicked(self, event):
         Simulator.left_pressed = True
         print("You pressed: ", event.x, event.y)
         self.wrist.center = Simulator.rotate((100, 0), self.wrist.get_center(), 0.1)
+        self._update_limb_positions()
+
+    def _update_limb_positions(self):
+        self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
+        self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
+        self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
         plt.gca().figure.canvas.draw()
 
     @staticmethod
@@ -170,7 +122,6 @@ class Simulator:
     def handle_close(event):
         Simulator.running = False
         print("Closing")
-
 
     # https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
     # Credit for this function to Mark Dickinson
