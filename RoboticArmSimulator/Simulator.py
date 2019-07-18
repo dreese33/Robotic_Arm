@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.transforms
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
@@ -86,6 +87,13 @@ class Simulator:
             plt.gca().add_patch(self.shoulder)
 
             self._update_limb_positions()
+            self.curr_wrist_rotation = 0
+            self.curr_elbow_rotation = 0
+            self.curr_shoulder_rotation = 0
+
+            # List the joints and limbs in order
+            Simulator.arm_joints = [self.wrist, self.elbow, self.shoulder]
+            Simulator.arm_limbs = [self.hand, self.forearm, self.arm]
 
             plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
 
@@ -104,14 +112,38 @@ class Simulator:
     def mouse_clicked(self, event):
         Simulator.left_pressed = True
         print("You pressed: ", event.x, event.y)
-        self.wrist.center = Simulator.rotate((100, 0), self.wrist.get_center(), 0.1)
-        self._update_limb_positions()
+
+        # Rotate around center
+        self.curr_wrist_rotation += 0.1
+        t = matplotlib.transforms.Affine2D().rotate_around(self.wrist.center[0], self.wrist.center[1],
+                                                           self.curr_wrist_rotation)
+        self.hand.set_transform(t + plt.gca().transData)
+
+        self.curr_elbow_rotation += 0.2
+        t1 = matplotlib.transforms.Affine2D().rotate_around(self.elbow.center[0], self.elbow.center[1],
+                                                            self.curr_elbow_rotation)
+        self.forearm.set_transform(t1 + plt.gca().transData)
+
+        self.curr_shoulder_rotation += 0.05
+        t2 = matplotlib.transforms.Affine2D().rotate_around(self.shoulder.center[0], self.shoulder.center[1],
+                                                            self.curr_shoulder_rotation)
+        self.arm.set_transform(t2 + plt.gca().transData)
+        plt.gca().figure.canvas.draw()
 
     def _update_limb_positions(self):
         self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
         self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
         self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
         plt.gca().figure.canvas.draw()
+
+    def rotate_joints(self, joint):
+        """
+        base = Simulator.arm_joints[joint]
+
+        for i in range(joint + 1):
+        """
+        pass
+
 
     @staticmethod
     def mouse_released(event):
