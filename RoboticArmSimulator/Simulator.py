@@ -62,9 +62,9 @@ class Simulator:
             self.hand_width = (1 / 12) * Simulator.simulator_plot_width
             self.forearm_width = (1 / 6) * Simulator.simulator_plot_width       # Same as arm width
 
-            wrist_center = (150, 100)
-            elbow_center = (200, 10)
-            shoulder_center = (-100, -200)
+            shoulder_center = (0, 0)
+            elbow_center = (shoulder_center[0] - self.forearm_width, 0)
+            wrist_center = (elbow_center[0] - self.forearm_width, 0)
 
             # Limbs should be behind the joints
             self.hand = self._default_limb(self.hand_width)
@@ -109,6 +109,20 @@ class Simulator:
     def _add_joint(center, radius, color_str):
         return plt.Circle(center, radius=radius, fc=color_str)
 
+    def _update_limb_positions(self):
+        self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
+        self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
+        self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
+        plt.gca().figure.canvas.draw()
+
+    def rotate_joints(self, joint):
+        """
+        base = Simulator.arm_joints[joint]
+
+        for i in range(joint + 1):
+        """
+        pass
+
     def mouse_clicked(self, event):
         Simulator.left_pressed = True
         print("You pressed: ", event.x, event.y)
@@ -129,21 +143,6 @@ class Simulator:
                                                             self.curr_shoulder_rotation)
         self.arm.set_transform(t2 + plt.gca().transData)
         plt.gca().figure.canvas.draw()
-
-    def _update_limb_positions(self):
-        self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
-        self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
-        self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
-        plt.gca().figure.canvas.draw()
-
-    def rotate_joints(self, joint):
-        """
-        base = Simulator.arm_joints[joint]
-
-        for i in range(joint + 1):
-        """
-        pass
-
 
     @staticmethod
     def mouse_released(event):
