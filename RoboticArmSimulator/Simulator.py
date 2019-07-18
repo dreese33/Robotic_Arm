@@ -37,8 +37,10 @@ class Simulator:
     left_pressed = False
     running = False
     simulator_plot_width = 1000
+
     arm_limbs = []
     arm_joints = []
+    rotations = []
 
     def __init__(self):
 
@@ -91,6 +93,8 @@ class Simulator:
             self.curr_elbow_rotation = 0
             self.curr_shoulder_rotation = 0
 
+            Simulator.rotations = [self.curr_wrist_rotation, self.curr_elbow_rotation, self.curr_shoulder_rotation]
+
             # List the joints and limbs in order
             Simulator.arm_joints = [self.wrist, self.elbow, self.shoulder]
             Simulator.arm_limbs = [self.hand, self.forearm, self.arm]
@@ -115,19 +119,29 @@ class Simulator:
         self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
         plt.gca().figure.canvas.draw()
 
-    def rotate_joints(self, joint):
-        """
+    @staticmethod
+    def rotate_joints(joint, radians):
+
         base = Simulator.arm_joints[joint]
+        Simulator.rotations[joint] += radians
 
         for i in range(joint + 1):
-        """
-        pass
+            t = matplotlib.transforms.Affine2D().rotate_around(base.center[0],
+                                                               base.center[1],
+                                                               Simulator.rotations[joint])
+
+            Simulator.arm_limbs[i].set_transform(t + plt.gca().transData)
+            if i != 0:
+                Simulator.arm_joints[i - 1].set_transform(t + plt.gca().transData)
+
+        plt.gca().figure.canvas.draw()
 
     def mouse_clicked(self, event):
         Simulator.left_pressed = True
         print("You pressed: ", event.x, event.y)
 
         # Rotate around center
+        """
         self.curr_wrist_rotation += 0.1
         t = matplotlib.transforms.Affine2D().rotate_around(self.wrist.center[0], self.wrist.center[1],
                                                            self.curr_wrist_rotation)
@@ -142,7 +156,8 @@ class Simulator:
         t2 = matplotlib.transforms.Affine2D().rotate_around(self.shoulder.center[0], self.shoulder.center[1],
                                                             self.curr_shoulder_rotation)
         self.arm.set_transform(t2 + plt.gca().transData)
-        plt.gca().figure.canvas.draw()
+        plt.gca().figure.canvas.draw()"""
+        Simulator.rotate_joints(2, 0.1)
 
     @staticmethod
     def mouse_released(event):
