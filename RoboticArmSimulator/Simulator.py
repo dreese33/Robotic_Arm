@@ -22,6 +22,8 @@ class Simulator:
 
     Instance Variables:
 
+    current_fig_axes - The axes of the current figure
+
     Joints:
     wrist - Wrist of the arm
     elbow - Elbow of the arm
@@ -52,18 +54,17 @@ class Simulator:
         if not Simulator.running:
             Simulator.running = True
 
-            # Select joint
-            joint_selector = RadioButtons(plt.gca(), ('wrist', 'elbow', 'shoulder'))
-            joint_selector.on_clicked(self.set_rotation_point)
-
             quadrant_width = Simulator.simulator_plot_width / 2
 
-            figure = plt.figure(num='Robotic Arm Simulator', figsize=(5, 5))
+            figure = plt.figure(num='Robotic Arm Simulator', figsize=(6, 5))
             figure.canvas.mpl_connect('button_press_event', self.mouse_clicked)
-            figure.canvas.mpl_connect('button_release_event', Simulator.mouse_released)
+            figure.canvas.mpl_connect('button_release_event', self.mouse_released)
             figure.canvas.mpl_connect('close_event', Simulator.handle_close)
 
+            plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
             plt.title('Simulator')
+            plt.subplots_adjust(left=0.3)
+            self.current_fig_axes = plt.gca()
 
             # Shapes
             wrist_radius = (1 / 40) * Simulator.simulator_plot_width
@@ -99,12 +100,25 @@ class Simulator:
 
             self._update_limb_positions()
             self.curr_joint_rotation = 0
+            self.cw = 0
 
             # List the joints and limbs in order
             Simulator.arm_joints = [self.wrist, self.elbow, self.shoulder]
             Simulator.arm_limbs = [self.hand, self.forearm, self.arm]
 
-            plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
+            axcolor = 'lightgoldenrodyellow'
+            rax = plt.axes([0.05, 0.7, 0.17, 0.20], facecolor=axcolor)
+
+            # Select joint
+            joint_selector = RadioButtons(rax, ('wrist', 'elbow', 'shoulder'))
+            joint_selector.on_clicked(self.set_rotation_point)
+
+            rax = plt.axes([0.05, 0.4, 0.15, 0.15], facecolor=axcolor)
+
+            clockwise_selector = RadioButtons(rax, ('CW', 'CCW'))
+            clockwise_selector.on_clicked(self.set_clockwise)
+
+            plt.axes(self.current_fig_axes)
 
             plt.show()
 
@@ -115,6 +129,12 @@ class Simulator:
             self.curr_joint_rotation = 1
         else:
             self.curr_joint_rotation = 2
+
+    def set_clockwise(self, label):
+        if label == 'CW':
+            self.cw = 0
+        else:
+            self.cw = 1
 
     def _get_limb_origin(self, joint, limb_width):
         return joint.center[0] - limb_width, joint.center[1] - self.pvc_height / 2
@@ -136,6 +156,9 @@ class Simulator:
 
         base = Simulator.arm_joints[self.curr_joint_rotation]
 
+        if self.cw == 0:
+            radians = -radians
+
         # Handle joints first
         for i in range(self.curr_joint_rotation + 1):
             if i != 0:
@@ -143,6 +166,7 @@ class Simulator:
                 joint.center = Simulator.rotate(base.center, joint.center, radians)
 
         for i in range(self.curr_joint_rotation + 1):
+
             Simulator.total_rotations[i] += radians
 
             t = matplotlib.transforms.Affine2D().rotate_around(Simulator.arm_joints[i].center[0],
@@ -159,14 +183,15 @@ class Simulator:
         return matplotlib.transforms.Affine2D().rotate_around(0, 0, 0)
 
     def mouse_clicked(self, event):
-        Simulator.left_pressed = True
-        print("You pressed: ", event.x, event.y)
-        self.rotate_joints(0.1)
+        if event.inaxes == self.current_fig_axes:
+            Simulator.left_pressed = True
+            print("You pressed: ", event.x, event.y)
+            self.rotate_joints(0.1)
 
-    @staticmethod
-    def mouse_released(event):
-        Simulator.left_pressed = False
-        print("Released at: ", event.x, event.y)
+    def mouse_released(self, event):
+        if event.inaxes == self.current_fig_axes:
+            Simulator.left_pressed = False
+            print("Released at: ", event.x, event.y)
 
     @staticmethod
     def handle_close(event):
