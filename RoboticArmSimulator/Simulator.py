@@ -2,7 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.transforms
-from matplotlib.widgets import RadioButtons
+from matplotlib.widgets import RadioButtons, Slider
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
@@ -64,7 +64,7 @@ class Simulator:
 
             quadrant_width = Simulator.simulator_plot_width / 2
 
-            figure = plt.figure(num='Robotic Arm Simulator', figsize=(6, 5))
+            figure = plt.figure(num='Robotic Arm Simulator', figsize=(7, 6))
             figure.canvas.mpl_connect('button_press_event', self.mouse_clicked)
             figure.canvas.mpl_connect('button_release_event', self.mouse_released)
             figure.canvas.mpl_connect('close_event', Simulator.handle_close)
@@ -74,7 +74,7 @@ class Simulator:
 
             plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
             plt.title('Simulator')
-            plt.subplots_adjust(left=0.3)
+            plt.subplots_adjust(left=0.4, bottom=0.3)
             self.current_fig_axes = plt.gca()
 
             # Shapes
@@ -135,6 +135,14 @@ class Simulator:
             self.clockwise_selector = RadioButtons(rax, ('CW', 'CCW'))
             self.clockwise_selector.on_clicked(self.set_clockwise)
 
+            rax = plt.axes([0.40, 0.15, 0.50, 0.03])
+
+            self.init_val = 6
+            self.speed = Simulator.to_radians(self.init_val)
+
+            self.speed_slider = Slider(rax, 'Speed', 0.1, 20, valinit=self.init_val)
+            self.speed_slider.on_changed(self.update_speed)
+
             plt.axes(self.current_fig_axes)
 
             plt.show()
@@ -152,6 +160,9 @@ class Simulator:
             self.cw = 0
         else:
             self.cw = 1
+
+    def update_speed(self, speed):
+        self.speed = Simulator.to_radians(speed)
 
     def _get_limb_origin(self, joint, limb_width):
         return joint.center[0] - limb_width, joint.center[1] - self.pvc_height / 2
@@ -203,7 +214,7 @@ class Simulator:
         if event.inaxes == self.current_fig_axes:
             Simulator.left_pressed = True
             print("You pressed: ", event.x, event.y)
-            self.rotate_joints(0.1)
+            self.rotate_joints(self.speed)
             self.previous_arrow = 0
 
     def mouse_released(self, event):
@@ -216,7 +227,7 @@ class Simulator:
             if Simulator.unlocked:
                 Simulator.unlocked = False
                 self.previous_arrow = 0
-                self.rotate_joints(0.1)
+                self.rotate_joints(self.speed)
                 Simulator.unlocked = True
 
     @staticmethod
@@ -243,7 +254,7 @@ class Simulator:
 
     def opposite_arrow_pressed(self, current_arrow):
         self.reverse_clockwise()
-        self.rotate_joints(0.1)
+        self.rotate_joints(self.speed)
         self.previous_arrow = current_arrow
 
     # Adds key controls to the radio buttons for optimal control of the simulator
@@ -274,7 +285,7 @@ class Simulator:
                     self.move_robot_right()
                     self.previous_arrow = 1
                 else:
-                    self.rotate_joints(0.1)
+                    self.rotate_joints(self.speed)
         elif event.key == 'left':
             if self.previous_arrow == 1:
                 self.opposite_arrow_pressed(2)
@@ -283,7 +294,7 @@ class Simulator:
                     self.move_robot_left()
                     self.previous_arrow = 2
                 else:
-                    self.rotate_joints(0.1)
+                    self.rotate_joints(self.speed)
         elif event.key == 'up':
             if self.previous_arrow == 4:
                 self.opposite_arrow_pressed(3)
@@ -292,7 +303,7 @@ class Simulator:
                     self.move_robot_up()
                     self.previous_arrow = 3
                 else:
-                    self.rotate_joints(0.1)
+                    self.rotate_joints(self.speed)
         elif event.key == 'down':
             if self.previous_arrow == 3:
                 self.opposite_arrow_pressed(4)
@@ -301,79 +312,85 @@ class Simulator:
                     self.move_robot_down()
                     self.previous_arrow = 4
                 else:
-                    self.rotate_joints(0.1)
+                    self.rotate_joints(self.speed)
 
     def move_robot_right(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation < self.degree_quadrants[0]:
+        if curr_joint_rotation == 0:
+            self.clockwise_selector.set_active(0)
+            self.cw = 0
+        elif curr_joint_rotation <= self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation < self.degree_quadrants[1]:
+        elif curr_joint_rotation <= self.degree_quadrants[1]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation < self.degree_quadrants[2]:
+        elif curr_joint_rotation <= self.degree_quadrants[2]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
         else:
             self.clockwise_selector.set_active(0)
             self.cw = 0
 
-        self.rotate_joints(0.1)
+        self.rotate_joints(self.speed)
 
     def move_robot_left(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation < self.degree_quadrants[0]:
+        if curr_joint_rotation == 0:
+            self.clockwise_selector.set_active(1)
+            self.cw = 1
+        elif curr_joint_rotation <= self.degree_quadrants[0]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation < self.degree_quadrants[1]:
+        elif curr_joint_rotation <= self.degree_quadrants[1]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation < self.degree_quadrants[2]:
+        elif curr_joint_rotation <= self.degree_quadrants[2]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
         else:
             self.clockwise_selector.set_active(1)
             self.cw = 1
 
-        self.rotate_joints(0.1)
+        self.rotate_joints(self.speed)
 
     def move_robot_up(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation < self.degree_quadrants[0]:
+        if curr_joint_rotation <= self.degree_quadrants[0]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation < self.degree_quadrants[1]:
+        elif curr_joint_rotation <= self.degree_quadrants[1]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation < self.degree_quadrants[2]:
+        elif curr_joint_rotation <= self.degree_quadrants[2]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
         else:
             self.clockwise_selector.set_active(0)
             self.cw = 0
 
-        self.rotate_joints(0.1)
+        self.rotate_joints(self.speed)
 
     def move_robot_down(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation < self.degree_quadrants[0]:
+        if curr_joint_rotation <= self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation < self.degree_quadrants[1]:
+        elif curr_joint_rotation <= self.degree_quadrants[1]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation < self.degree_quadrants[2]:
+        elif curr_joint_rotation <= self.degree_quadrants[2]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
         else:
             self.clockwise_selector.set_active(1)
             self.cw = 1
 
-        self.rotate_joints(0.1)
+        self.rotate_joints(self.speed)
 
     @staticmethod
     def handle_close(event):
