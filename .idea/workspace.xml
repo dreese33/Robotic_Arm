@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="115" column="49" selection-start-line="115" selection-start-column="49" selection-end-line="115" selection-end-column="49" />
+            <state relative-caret-position="3135">
+              <caret line="209" column="81" selection-start-line="209" selection-start-column="81" selection-end-line="209" selection-end-column="81" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -51,7 +51,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>set_size</find>
       <find>setup</find>
       <find>self.hand</find>
       <find>hand</find>
@@ -81,6 +80,7 @@
       <find>pvc_height</find>
       <find>mouse_released</find>
       <find>mouse_released`</find>
+      <find>self.cw</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -319,23 +319,24 @@
       <workItem from="1563483901693" duration="6131000" />
       <workItem from="1563495761308" duration="365000" />
       <workItem from="1563553335000" duration="5921000" />
-      <workItem from="1563560268284" duration="2761000" />
+      <workItem from="1563560268284" duration="3137000" />
+      <workItem from="1563572985448" duration="829000" />
+      <workItem from="1563638830868" duration="1051000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124360000" />
+    <option name="totallyTimeSpent" value="126616000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.39270386" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.4041488" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34578314" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.34578314" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3994452" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -383,7 +384,7 @@
     <SUITE FILE_PATH="coverage/Robotic_Arm$Robotic_Arm_Control_Gui.coverage" NAME="Robotic_Arm_Control_Gui Coverage Results" MODIFIED="1563398181899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$SecondProjectTest.coverage" NAME="SecondProjectTest Coverage Results" MODIFIED="1563125777938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Second_Project" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1562616332758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563564618477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563639876449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/StepperMotorMultithreaded/__init__.py">
@@ -550,8 +551,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="115" column="49" selection-start-line="115" selection-start-column="49" selection-end-line="115" selection-end-column="49" />
+        <state relative-caret-position="3135">
+          <caret line="209" column="81" selection-start-line="209" selection-start-column="81" selection-end-line="209" selection-end-column="81" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

@@ -38,6 +38,10 @@ class Simulator:
     pvc_height - Height of all of the limbs
     hand_width - Width of the hand
     forearm_width - Width of the forearm and arm
+
+    Radio Buttons:
+    joint_selector - Select which joint to use
+    clockwise_selector - Select clockwise or counterclockwise
     """
 
     left_pressed = False
@@ -48,6 +52,7 @@ class Simulator:
     arm_joints = []
 
     total_rotations = [0, 0, 0]
+    unlocked = True
 
     def __init__(self):
 
@@ -60,6 +65,8 @@ class Simulator:
             figure.canvas.mpl_connect('button_press_event', self.mouse_clicked)
             figure.canvas.mpl_connect('button_release_event', self.mouse_released)
             figure.canvas.mpl_connect('close_event', Simulator.handle_close)
+            figure.canvas.mpl_connect('motion_notify_event', self.mouse_dragged)
+            figure.canvas.mpl_connect('key_press_event', self.radio_control)
 
             plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
             plt.title('Simulator')
@@ -107,16 +114,16 @@ class Simulator:
             Simulator.arm_limbs = [self.hand, self.forearm, self.arm]
 
             axcolor = 'lightgoldenrodyellow'
-            rax = plt.axes([0.05, 0.7, 0.17, 0.20], facecolor=axcolor)
+            rax = plt.axes([0.05, 0.6, 0.17, 0.20], facecolor=axcolor)
 
             # Select joint
-            joint_selector = RadioButtons(rax, ('wrist', 'elbow', 'shoulder'))
-            joint_selector.on_clicked(self.set_rotation_point)
+            self.joint_selector = RadioButtons(rax, ('wrist', 'elbow', 'shoulder'))
+            self.joint_selector.on_clicked(self.set_rotation_point)
 
             rax = plt.axes([0.05, 0.4, 0.15, 0.15], facecolor=axcolor)
 
-            clockwise_selector = RadioButtons(rax, ('CW', 'CCW'))
-            clockwise_selector.on_clicked(self.set_clockwise)
+            self.clockwise_selector = RadioButtons(rax, ('CW', 'CCW'))
+            self.clockwise_selector.on_clicked(self.set_clockwise)
 
             plt.axes(self.current_fig_axes)
 
@@ -192,6 +199,32 @@ class Simulator:
         if event.inaxes == self.current_fig_axes:
             Simulator.left_pressed = False
             print("Released at: ", event.x, event.y)
+
+    def mouse_dragged(self, event):
+        if Simulator.left_pressed:
+            if Simulator.unlocked:
+                Simulator.unlocked = False
+                self.rotate_joints(0.1)
+                Simulator.unlocked = True
+
+    # Adds key controls to the radio buttons for optimal control of the simulator
+    def radio_control(self, event):
+        if event.key == 'c':
+            if self.cw == 0:
+                self.cw = 1
+                self.clockwise_selector.set_active(1)
+            else:
+                self.cw = 0
+                self.clockwise_selector.set_active(0)
+        elif event.key == '1':
+            self.curr_joint_rotation = 0
+            self.joint_selector.set_active(0)
+        elif event.key == '2':
+            self.curr_joint_rotation = 1
+            self.joint_selector.set_active(1)
+        elif event.key == '3':
+            self.curr_joint_rotation = 2
+            self.joint_selector.set_active(2)
 
     @staticmethod
     def handle_close(event):
