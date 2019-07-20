@@ -233,51 +233,75 @@ class Simulator:
 
         return radians
 
+    def reverse_clockwise(self):
+        if self.cw == 0:
+            self.cw = 1
+            self.clockwise_selector.set_active(1)
+        else:
+            self.cw = 0
+            self.clockwise_selector.set_active(0)
+
+    def opposite_arrow_pressed(self, current_arrow):
+        self.reverse_clockwise()
+        self.rotate_joints(0.1)
+        self.previous_arrow = current_arrow
+
     # Adds key controls to the radio buttons for optimal control of the simulator
     def radio_control(self, event):
         if event.key == 'c':
-            if self.cw == 0:
-                self.cw = 1
-                self.clockwise_selector.set_active(1)
-            else:
-                self.cw = 0
-                self.clockwise_selector.set_active(0)
+            self.previous_arrow = 0
+            self.reverse_clockwise()
         elif event.key == '1':
             self.curr_joint_rotation = 0
             self.joint_selector.set_active(0)
+            self.previous_arrow = 0
         elif event.key == '2':
             self.curr_joint_rotation = 1
             self.joint_selector.set_active(1)
+            self.previous_arrow = 0
         elif event.key == '3':
             self.curr_joint_rotation = 2
             self.joint_selector.set_active(2)
+            self.previous_arrow = 0
 
     # Move the robot based on its current joint position and arrow keys
     def arrow_key_listener(self, event):
         if event.key == 'right':
-            if self.previous_arrow != 1:
-                self.move_robot_right()
-                self.previous_arrow = 1
+            if self.previous_arrow == 2:
+                self.opposite_arrow_pressed(1)
             else:
-                self.rotate_joints(0.1)
+                if self.previous_arrow != 1:
+                    self.move_robot_right()
+                    self.previous_arrow = 1
+                else:
+                    self.rotate_joints(0.1)
         elif event.key == 'left':
-            if self.previous_arrow != 2:
-                self.move_robot_left()
-                self.previous_arrow = 2
+            if self.previous_arrow == 1:
+                self.opposite_arrow_pressed(2)
             else:
-                self.rotate_joints(0.1)
+                if self.previous_arrow != 2:
+                    self.move_robot_left()
+                    self.previous_arrow = 2
+                else:
+                    self.rotate_joints(0.1)
         elif event.key == 'up':
-            if self.previous_arrow != 3:
-                self.move_robot_up()
-                self.previous_arrow = 3
+            if self.previous_arrow == 4:
+                self.opposite_arrow_pressed(3)
             else:
-                self.rotate_joints(0.1)
+                if self.previous_arrow != 3:
+                    self.move_robot_up()
+                    self.previous_arrow = 3
+                else:
+                    self.rotate_joints(0.1)
         elif event.key == 'down':
-            if self.previous_arrow != 4:
-                self.move_robot_down()
-                self.previous_arrow = 4
+            if self.previous_arrow == 3:
+                self.opposite_arrow_pressed(4)
             else:
-                self.rotate_joints(0.1)
+                if self.previous_arrow != 4:
+                    self.move_robot_down()
+                    self.previous_arrow = 4
+                else:
+                    self.rotate_joints(0.1)
 
     def move_robot_right(self):
         # TEST
