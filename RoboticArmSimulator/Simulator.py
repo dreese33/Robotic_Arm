@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.transforms
 from matplotlib.widgets import RadioButtons, Slider, TextBox
-from _thread import start_new_thread
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
@@ -151,19 +150,34 @@ class Simulator:
             self.speed_slider = Slider(rax, 'Speed' + '\n' + '(in degrees)', 0.1, 20, valinit=init_val)
             self.speed_slider.on_changed(self.update_speed)
 
-            # Text boxes
+            # Text
+            axbox_wrist_text = plt.axes([0.31, 0.07, 0.1, 0.05])
+            axbox_wrist_text.text(0, 0, 'Wrist: ', fontsize=12)
+            axbox_wrist_text.axis('off')
+
+            axbox_elbow_text = plt.axes([0.51, 0.07, 0.1, 0.05])
+            axbox_elbow_text.text(0, 0, 'Elbow: ', fontsize=12)
+            axbox_elbow_text.axis('off')
+
+            axbox_shoulder_text = plt.axes([0.71, 0.07, 0.1, 0.05])
+            axbox_shoulder_text.text(0, 0, 'Shoulder: ', fontsize=12)
+            axbox_shoulder_text.axis('off')
+
             initial_text = r'${:.0f}\degree$'.format(0)
-            axbox = plt.axes([0.40, 0.07, 0.1, 0.05])
-            self.text_box_wrist = TextBox(axbox, 'Wrist', initial=initial_text)
-            self.text_box_wrist.set_active(False)
+            self.axbox_wrist = plt.axes([0.40, 0.07, 0.1, 0.05])
+            self.axbox_wrist.text(0, 0, initial_text, fontsize=15,
+                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_wrist.axis('off')
 
-            axbox = plt.axes([0.60, 0.07, 0.1, 0.05])
-            self.text_box_elbow = TextBox(axbox, 'Elbow', initial=initial_text)
-            self.text_box_elbow.set_active(False)
+            self.axbox_elbow = plt.axes([0.61, 0.07, 0.1, 0.05])
+            self.axbox_elbow.text(0, 0, initial_text, fontsize=15,
+                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_elbow.axis('off')
 
-            axbox = plt.axes([0.80, 0.07, 0.1, 0.05])
-            self.text_box_shoulder = TextBox(axbox, 'Shoulder', initial=initial_text)
-            self.text_box_shoulder.set_active(False)
+            self.axbox_shoulder = plt.axes([0.84, 0.07, 0.1, 0.05])
+            self.axbox_shoulder.text(0, 0, initial_text, fontsize=15,
+                                     bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_shoulder.axis('off')
 
             plt.axes(self.current_fig_axes)
 
@@ -197,21 +211,21 @@ class Simulator:
         return plt.Circle(center, radius=radius, fc=color_str)
 
     def _update_angles(self, degrees):
-
-        # Text boxes
-
-        #print("Starting, possible double access to variable curr_joint_rotation")
         if self.curr_joint_rotation == 0:
-            #print("Rotating")
-            self.text_box_wrist.set_val(r'${:.0f}\degree$'.format(degrees))
-            #self.text_box_wrist.stop_typing()
-            #print("Rotated")
+            self.axbox_wrist.clear()
+            self.axbox_wrist.text(0, 0, r'${:.0f}\degree$'.format(degrees), fontsize=15,
+                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_wrist.axis('off')
         elif self.curr_joint_rotation == 1:
-            self.text_box_elbow.set_val(r'${:.0f}\degree$'.format(degrees))
-            #self.text_box_elbow.stop_typing()
+            self.axbox_elbow.clear()
+            self.axbox_elbow.text(0, 0, r'${:.0f}\degree$'.format(degrees), fontsize=15,
+                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_elbow.axis('off')
         elif self.curr_joint_rotation == 2:
-            self.text_box_shoulder.set_val(r'${:.0f}\degree$'.format(degrees))
-            #self.text_box_shoulder.stop_typing()
+            self.axbox_shoulder.clear()
+            self.axbox_shoulder.text(0, 0, r'${:.0f}\degree$'.format(degrees), fontsize=15,
+                                     bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_shoulder.axis('off')
         else:
             print("Something went wrong in _update_angles")
 
@@ -245,23 +259,7 @@ class Simulator:
             Simulator.arm_limbs[i].set_transform(t)
 
         self._update_limb_positions()
-        """
-        if not Simulator.update_angles_thread_lock:
-            Simulator.update_angles_thread_lock = True
-            self._update_angles(Simulator.to_degrees(
-                Simulator.total_rotations[self.curr_joint_rotation]))
-            Simulator.update_angles_thread_lock = False"""
-        """
-        if not Simulator.update_angles_thread_lock:
-            degrees = Simulator.to_degrees(
-                Simulator.total_rotations[self.curr_joint_rotation])
-            Simulator.update_angles_thread_lock = True
-            update_degrees_thread = threading.Thread(target=self._update_angles,
-                                                     args=(degrees,
-                                                           self.curr_joint_rotation))
-            update_degrees_thread.start()
-            update_degrees_thread.join()
-            Simulator.update_angles_thread_lock = False"""
+        self._update_angles(Simulator.to_degrees(Simulator.total_rotations[self.curr_joint_rotation]))
 
         plt.gca().figure.canvas.draw()
 
@@ -340,6 +338,7 @@ class Simulator:
 
     # Move the robot based on its current joint position and arrow keys
     def arrow_key_listener(self, event):
+        print("Pressed")
         if event.key == 'right':
             if self.previous_arrow == 2:
                 self.opposite_arrow_pressed(1)
@@ -383,7 +382,7 @@ class Simulator:
         if curr_joint_rotation == 0 and Simulator.firsts[self.curr_joint_rotation]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-            Simulator.firsts[curr_joint_rotation] = False
+            Simulator.firsts[self.curr_joint_rotation] = False
         elif curr_joint_rotation < self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1

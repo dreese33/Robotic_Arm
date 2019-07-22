@@ -18,8 +18,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RoboticArm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="30">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -30,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1677">
-              <caret line="316" lean-forward="true" selection-start-line="316" selection-end-line="316" />
+            <state relative-caret-position="324">
+              <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -50,7 +50,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>transform</find>
       <find>set_xy</find>
       <find>rotate_joints</find>
       <find>Simulator</find>
@@ -66,20 +65,21 @@
       <find>0.1</find>
       <find>self.init</find>
       <find>to_radians</find>
-      <find>_update</find>
       <find>text_box_wrist</find>
       <find>text_box</find>
-      <find>rotate</find>
       <find>update_limb_positions</find>
       <find>rotating</find>
       <find>self.curr_joint_rotation</find>
       <find>Simulator.first</find>
-      <find>_update_angles</find>
       <find>relea</find>
       <find>key_released</find>
       <find>arrow_key</find>
-      <find>update_angles</find>
       <find>released</find>
+      <find>radio_control</find>
+      <find>rotate</find>
+      <find>_update_angles</find>
+      <find>update_angles</find>
+      <find>_update</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -125,6 +125,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -141,7 +142,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -322,22 +322,24 @@
       <workItem from="1563572985448" duration="829000" />
       <workItem from="1563638830868" duration="1051000" />
       <workItem from="1563640016377" duration="14441000" />
+      <workItem from="1563818011320" duration="3594000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="141057000" />
+    <option name="totallyTimeSpent" value="144651000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.40987125" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.4155937" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.34578314" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3994452" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34578314" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3987952" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -384,7 +386,7 @@
     <SUITE FILE_PATH="coverage/Robotic_Arm$Robotic_Arm_Control_Gui.coverage" NAME="Robotic_Arm_Control_Gui Coverage Results" MODIFIED="1563398181899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$SecondProjectTest.coverage" NAME="SecondProjectTest Coverage Results" MODIFIED="1563125777938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Second_Project" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1562616332758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563745222027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563821901518" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/StepperMotorMultithreaded/__init__.py">
@@ -541,8 +543,8 @@
     <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Joint.py" />
     <entry file="file://$PROJECT_DIR$/RoboticArm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="30">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
@@ -551,8 +553,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1677">
-          <caret line="316" lean-forward="true" selection-start-line="316" selection-end-line="316" />
+        <state relative-caret-position="324">
+          <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
