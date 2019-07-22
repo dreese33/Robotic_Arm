@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d329c3c-4eef-47d6-8d8d-a4d69afb2749" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,8 +31,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
+            <state relative-caret-position="4170">
+              <caret line="278" lean-forward="true" selection-start-line="278" selection-end-line="278" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -50,18 +51,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>set_xy</find>
-      <find>rotate_joints</find>
-      <find>Simulator</find>
-      <find>first</find>
-      <find>wrist</find>
-      <find>pvc_height</find>
-      <find>mouse_released</find>
-      <find>mouse_released`</find>
-      <find>radians</find>
-      <find>self.cw</find>
-      <find>previous_direction</find>
-      <find>if self.cw ==</find>
       <find>0.1</find>
       <find>self.init</find>
       <find>to_radians</find>
@@ -80,6 +69,18 @@
       <find>_update_angles</find>
       <find>update_angles</find>
       <find>_update</find>
+      <find>simplify</find>
+      <find>_update_angle</find>
+      <find>simp</find>
+      <find>firsts</find>
+      <find>left_pressed</find>
+      <find>running</find>
+      <find>simulator_plot_width</find>
+      <find>arm_limbs</find>
+      <find>total_rotations</find>
+      <find>unlocked</find>
+      <find>update_angles_thread_lock</find>
+      <find>current_fig_axes</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -322,23 +323,22 @@
       <workItem from="1563572985448" duration="829000" />
       <workItem from="1563638830868" duration="1051000" />
       <workItem from="1563640016377" duration="14441000" />
-      <workItem from="1563818011320" duration="3594000" />
+      <workItem from="1563818011320" duration="5377000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144651000" />
+    <option name="totallyTimeSpent" value="146434000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.4155937" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34578314" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.34578314" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3987952" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -386,7 +386,7 @@
     <SUITE FILE_PATH="coverage/Robotic_Arm$Robotic_Arm_Control_Gui.coverage" NAME="Robotic_Arm_Control_Gui Coverage Results" MODIFIED="1563398181899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$SecondProjectTest.coverage" NAME="SecondProjectTest Coverage Results" MODIFIED="1563125777938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Second_Project" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1562616332758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563821901518" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563823932938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/StepperMotorMultithreaded/__init__.py">
@@ -553,8 +553,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="176" column="48" selection-start-line="176" selection-start-column="48" selection-end-line="176" selection-end-column="48" />
+        <state relative-caret-position="4170">
+          <caret line="278" lean-forward="true" selection-start-line="278" selection-end-line="278" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

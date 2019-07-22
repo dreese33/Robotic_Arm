@@ -19,6 +19,7 @@ class Simulator:
     arm_limbs - Limbs listed in order
     arm_joints - Joints listed in order
     total_rotations - Array listing the total amount each joint should be rotated
+    firsts - Array containing values regarding the first movement of each joint
 
     Instance Variables:
 
@@ -56,8 +57,6 @@ class Simulator:
 
     total_rotations = [0, 0, 0]
     unlocked = True
-
-    update_angles_thread_lock = False
 
     firsts = [True, True, True]
 
@@ -259,6 +258,10 @@ class Simulator:
             Simulator.arm_limbs[i].set_transform(t)
 
         self._update_limb_positions()
+
+        for i in range(len(Simulator.total_rotations)):
+            Simulator.total_rotations[i] = self.simplify_radians(Simulator.total_rotations[i])
+
         self._update_angles(Simulator.to_degrees(Simulator.total_rotations[self.curr_joint_rotation]))
 
         plt.gca().figure.canvas.draw()
@@ -338,7 +341,6 @@ class Simulator:
 
     # Move the robot based on its current joint position and arrow keys
     def arrow_key_listener(self, event):
-        print("Pressed")
         if event.key == 'right':
             if self.previous_arrow == 2:
                 self.opposite_arrow_pressed(1)
@@ -378,7 +380,7 @@ class Simulator:
 
     def move_robot_right(self):
         # TEST
-        curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
+        curr_joint_rotation = Simulator.total_rotations[self.curr_joint_rotation]
         if curr_joint_rotation == 0 and Simulator.firsts[self.curr_joint_rotation]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
@@ -400,7 +402,7 @@ class Simulator:
 
     def move_robot_left(self):
         # TEST
-        curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
+        curr_joint_rotation = Simulator.total_rotations[self.curr_joint_rotation]
         if curr_joint_rotation == 0 and Simulator.firsts[self.curr_joint_rotation]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
@@ -422,7 +424,7 @@ class Simulator:
 
     def move_robot_up(self):
         # TEST
-        curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
+        curr_joint_rotation = Simulator.total_rotations[self.curr_joint_rotation]
         if curr_joint_rotation < self.degree_quadrants[0] :
             self.clockwise_selector.set_active(0)
             self.cw = 0
@@ -440,7 +442,7 @@ class Simulator:
 
     def move_robot_down(self):
         # TEST
-        curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
+        curr_joint_rotation = Simulator.total_rotations[self.curr_joint_rotation]
         if curr_joint_rotation < self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
@@ -458,7 +460,18 @@ class Simulator:
 
     @staticmethod
     def handle_close(event):
+        # Restart static variables
+        Simulator.left_pressed = False
         Simulator.running = False
+
+        Simulator.arm_limbs = []
+        Simulator.arm_joints = []
+
+        Simulator.total_rotations = [0, 0, 0]
+        Simulator.unlocked = True
+
+        Simulator.firsts = [True, True, True]
+
         print("Closing")
 
     # https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
