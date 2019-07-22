@@ -2,7 +2,8 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.transforms
-from matplotlib.widgets import RadioButtons, Slider
+from matplotlib.widgets import RadioButtons, Slider, TextBox
+from _thread import start_new_thread
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)
@@ -57,6 +58,10 @@ class Simulator:
     total_rotations = [0, 0, 0]
     unlocked = True
 
+    update_angles_thread_lock = False
+
+    firsts = [True, True, True]
+
     def __init__(self):
 
         if not Simulator.running:
@@ -88,6 +93,9 @@ class Simulator:
             shoulder_center = (0, 0)
             elbow_center = (shoulder_center[0] - self.forearm_width, 0)
             wrist_center = (elbow_center[0] - self.forearm_width, 0)
+
+            # Key control variables
+            self.arrow_key_pressed = False
 
             # Limbs should be behind the joints
             self.hand = self._default_limb(self.hand_width)
@@ -135,13 +143,27 @@ class Simulator:
             self.clockwise_selector = RadioButtons(rax, ('CW', 'CCW'))
             self.clockwise_selector.on_clicked(self.set_clockwise)
 
-            rax = plt.axes([0.40, 0.15, 0.50, 0.03])
+            rax = plt.axes([0.40, 0.17, 0.50, 0.03])
 
-            self.init_val = 6
-            self.speed = Simulator.to_radians(self.init_val)
+            init_val = 6
+            self.speed = Simulator.to_radians(init_val)
 
-            self.speed_slider = Slider(rax, 'Speed', 0.1, 20, valinit=self.init_val)
+            self.speed_slider = Slider(rax, 'Speed' + '\n' + '(in degrees)', 0.1, 20, valinit=init_val)
             self.speed_slider.on_changed(self.update_speed)
+
+            # Text boxes
+            initial_text = r'${:.0f}\degree$'.format(0)
+            axbox = plt.axes([0.40, 0.07, 0.1, 0.05])
+            self.text_box_wrist = TextBox(axbox, 'Wrist', initial=initial_text)
+            self.text_box_wrist.set_active(False)
+
+            axbox = plt.axes([0.60, 0.07, 0.1, 0.05])
+            self.text_box_elbow = TextBox(axbox, 'Elbow', initial=initial_text)
+            self.text_box_elbow.set_active(False)
+
+            axbox = plt.axes([0.80, 0.07, 0.1, 0.05])
+            self.text_box_shoulder = TextBox(axbox, 'Shoulder', initial=initial_text)
+            self.text_box_shoulder.set_active(False)
 
             plt.axes(self.current_fig_axes)
 
@@ -174,6 +196,25 @@ class Simulator:
     def _add_joint(center, radius, color_str):
         return plt.Circle(center, radius=radius, fc=color_str)
 
+    def _update_angles(self, degrees):
+
+        # Text boxes
+
+        #print("Starting, possible double access to variable curr_joint_rotation")
+        if self.curr_joint_rotation == 0:
+            #print("Rotating")
+            self.text_box_wrist.set_val(r'${:.0f}\degree$'.format(degrees))
+            #self.text_box_wrist.stop_typing()
+            #print("Rotated")
+        elif self.curr_joint_rotation == 1:
+            self.text_box_elbow.set_val(r'${:.0f}\degree$'.format(degrees))
+            #self.text_box_elbow.stop_typing()
+        elif self.curr_joint_rotation == 2:
+            self.text_box_shoulder.set_val(r'${:.0f}\degree$'.format(degrees))
+            #self.text_box_shoulder.stop_typing()
+        else:
+            print("Something went wrong in _update_angles")
+
     def _update_limb_positions(self):
         self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
         self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
@@ -204,6 +245,24 @@ class Simulator:
             Simulator.arm_limbs[i].set_transform(t)
 
         self._update_limb_positions()
+        """
+        if not Simulator.update_angles_thread_lock:
+            Simulator.update_angles_thread_lock = True
+            self._update_angles(Simulator.to_degrees(
+                Simulator.total_rotations[self.curr_joint_rotation]))
+            Simulator.update_angles_thread_lock = False"""
+        """
+        if not Simulator.update_angles_thread_lock:
+            degrees = Simulator.to_degrees(
+                Simulator.total_rotations[self.curr_joint_rotation])
+            Simulator.update_angles_thread_lock = True
+            update_degrees_thread = threading.Thread(target=self._update_angles,
+                                                     args=(degrees,
+                                                           self.curr_joint_rotation))
+            update_degrees_thread.start()
+            update_degrees_thread.join()
+            Simulator.update_angles_thread_lock = False"""
+
         plt.gca().figure.canvas.draw()
 
     @staticmethod
@@ -233,6 +292,10 @@ class Simulator:
     @staticmethod
     def to_radians(degrees):
         return degrees * (math.pi / 180)
+
+    @staticmethod
+    def to_degrees(radians):
+        return radians * (180 / math.pi)
 
     @staticmethod
     def simplify_radians(radians):
@@ -317,16 +380,17 @@ class Simulator:
     def move_robot_right(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation == 0:
+        if curr_joint_rotation == 0 and Simulator.firsts[self.curr_joint_rotation]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation <= self.degree_quadrants[0]:
+            Simulator.firsts[curr_joint_rotation] = False
+        elif curr_joint_rotation < self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation <= self.degree_quadrants[1]:
+        elif curr_joint_rotation < self.degree_quadrants[1]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation <= self.degree_quadrants[2]:
+        elif curr_joint_rotation < self.degree_quadrants[2]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
         else:
@@ -338,16 +402,17 @@ class Simulator:
     def move_robot_left(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation == 0:
+        if curr_joint_rotation == 0 and Simulator.firsts[self.curr_joint_rotation]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation <= self.degree_quadrants[0]:
+            Simulator.firsts[self.curr_joint_rotation] = False
+        elif curr_joint_rotation < self.degree_quadrants[0]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation <= self.degree_quadrants[1]:
+        elif curr_joint_rotation < self.degree_quadrants[1]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation <= self.degree_quadrants[2]:
+        elif curr_joint_rotation < self.degree_quadrants[2]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
         else:
@@ -359,13 +424,13 @@ class Simulator:
     def move_robot_up(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation <= self.degree_quadrants[0]:
+        if curr_joint_rotation < self.degree_quadrants[0] :
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation <= self.degree_quadrants[1]:
+        elif curr_joint_rotation < self.degree_quadrants[1]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation <= self.degree_quadrants[2]:
+        elif curr_joint_rotation < self.degree_quadrants[2]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
         else:
@@ -377,13 +442,13 @@ class Simulator:
     def move_robot_down(self):
         # TEST
         curr_joint_rotation = Simulator.simplify_radians(Simulator.total_rotations[self.curr_joint_rotation])
-        if curr_joint_rotation <= self.degree_quadrants[0]:
+        if curr_joint_rotation < self.degree_quadrants[0]:
             self.clockwise_selector.set_active(1)
             self.cw = 1
-        elif curr_joint_rotation <= self.degree_quadrants[1]:
+        elif curr_joint_rotation < self.degree_quadrants[1]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
-        elif curr_joint_rotation <= self.degree_quadrants[2]:
+        elif curr_joint_rotation < self.degree_quadrants[2]:
             self.clockwise_selector.set_active(0)
             self.cw = 0
         else:
