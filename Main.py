@@ -2,6 +2,7 @@ from tkinter import *
 from ManualControlWheel.ManualControlWheel import ManualControlWheel
 from tkinter import ttk
 from RoboticArmSimulator.Simulator import Simulator
+from _thread import start_new_thread, allocate_lock
 
 
 window = Tk()
