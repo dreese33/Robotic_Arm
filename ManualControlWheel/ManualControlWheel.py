@@ -18,6 +18,7 @@ class ManualControlWheel:
     total_theta - Total amount to rotate arrow by
     curr_image - The TKImage object for this instance
     curr_saved_img - Where the image is saved
+    img_pos - Current position of image
     
     Class variables:
     wheels_created - Number of ManualControlWheel objects created during the current execution
@@ -27,6 +28,7 @@ class ManualControlWheel:
         self.canvas = canvas
         self.total_theta = 0
         self.curr_saved_image = None
+        self.master = root
 
         t = turtle.RawTurtle(canvas)
         t.hideturtle()
@@ -35,26 +37,26 @@ class ManualControlWheel:
 
         screen_dim_to_use = min(float(canvas['width']), float(canvas['height']))
         screen_dims = float(canvas['width']), float(canvas['height'])
-        img_dim = float(screen_dim_to_use / 5)
+        self.img_dim = float(screen_dim_to_use / 5)
         outer_circle_rad = screen_dim_to_use / 3.15
         inner_circle_rad = screen_dim_to_use / 2.15
         label_additional_height = float(screen_dims[0] / 20)
-        self.center = 0, -outer_circle_rad - label_additional_height + img_dim / 2 + inner_circle_rad / 2
+        self.center = 0, -outer_circle_rad - label_additional_height + self.img_dim / 2 + inner_circle_rad / 2
         self.draw_axes_center(t)
 
         # Plot axes on graph using turtle
         ManualControlWheel.drawAxes(t, screen_dims)
 
-        t.sety(-outer_circle_rad - label_additional_height + img_dim / 2)
+        t.sety(-outer_circle_rad - label_additional_height + self.img_dim / 2)
         
         t.pendown()
-        t.circle(outer_circle_rad - img_dim / 2)
+        t.circle(outer_circle_rad - self.img_dim / 2)
         t.penup()
         
-        t.sety(-inner_circle_rad - label_additional_height + img_dim / 2)
+        t.sety(-inner_circle_rad - label_additional_height + self.img_dim / 2)
 
         t.pendown()
-        t.circle(inner_circle_rad - img_dim / 2)
+        t.circle(inner_circle_rad - self.img_dim / 2)
         t.penup()
 
         canvas.create_text((0, (-screen_dims[1] / 2) + label_additional_height), text=title, width=100)
@@ -62,11 +64,18 @@ class ManualControlWheel:
         ManualControlWheel.wheels_created += 1
         self.number = ManualControlWheel.wheels_created
 
-        self.curr_image = Image.open("ManualControlWheel/ColorWheelArrow.png")
+        self.curr_image = Image.open("ManualControlWheel/ColorWheelArrow.png").convert("RGBA")
 
-        self.curr_image = self.curr_image.resize((int(img_dim), int(img_dim)), Image.ANTIALIAS)
+        self.curr_image = self.curr_image.resize((int(self.img_dim), int(self.img_dim)), Image.ANTIALIAS)
         self.imgTk = ImageTk.PhotoImage(self.curr_image)
-        canvas.create_image((0, -outer_circle_rad - img_dim / 2), image=self.imgTk, tags='image_tag')
+
+        self.img_pos = 0, -outer_circle_rad #- self.img_dim / 2
+
+        fff = Image.new("RGBA", self.curr_image.size, (255, 255, 255, 0))
+        out = Image.composite(self.curr_image, fff, self.curr_image)
+        self.imgTk = ImageTk.PhotoImage(out)
+
+        canvas.create_image(self.img_pos, image=self.imgTk, tags='image_tag', anchor="center")
         self.assign_image(root, self.imgTk)
 
         # Detect mouse clicked/dragged
@@ -106,8 +115,20 @@ class ManualControlWheel:
         curr_move = theta - self.total_theta
 
         # (3) Move arrow to theta and rotate arrow to appropriate location
-        new_arrow_point = Simulator.rotate(self.center, self.canvas.coords('image_tag'), curr_move)
-        self.canvas.coords('image_tag', new_arrow_point)
+        rot = self.curr_image.rotate(math.degrees(-theta), resample=Image.BICUBIC, expand=True)
+
+        rot.convert("RGBA")
+        fff = Image.new("RGBA", rot.size, (255, 255, 255, 0))
+        out = Image.composite(rot, fff, rot)
+        self.imgTk = ImageTk.PhotoImage(out)
+
+        old_dim = self.canvas.coords('image_tag')
+        print(old_dim)
+        new_dim = Simulator.rotate(self.center, old_dim, curr_move)
+
+        self.canvas.delete('image_tag')
+        self.canvas.create_image((new_dim[0], new_dim[1]), image=self.imgTk, tags='image_tag', anchor="center")
+        self.assign_image(self.master, self.imgTk)
 
         self.total_theta = theta
 
