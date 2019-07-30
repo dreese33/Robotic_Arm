@@ -4,6 +4,7 @@ from PIL import Image
 from PIL import ImageTk
 import math
 from Ideas.shapes.Cartesian import Cartesian
+from RoboticArmSimulator.Simulator import Simulator
 
 
 class ManualControlWheel:
@@ -14,6 +15,9 @@ class ManualControlWheel:
     Instance variables: 
     center - Center of both circles
     canvas - Canvas of current ManualControlWheel
+    total_theta - Total amount to rotate arrow by
+    curr_image - The TKImage object for this instance
+    curr_saved_img - Where the image is saved
     
     Class variables:
     wheels_created - Number of ManualControlWheel objects created during the current execution
@@ -21,6 +25,8 @@ class ManualControlWheel:
 
     def __init__(self, canvas, root, title):
         self.canvas = canvas
+        self.total_theta = 0
+        self.curr_saved_image = None
 
         t = turtle.RawTurtle(canvas)
         t.hideturtle()
@@ -54,13 +60,14 @@ class ManualControlWheel:
         canvas.create_text((0, (-screen_dims[1] / 2) + label_additional_height), text=title, width=100)
 
         ManualControlWheel.wheels_created += 1
+        self.number = ManualControlWheel.wheels_created
 
-        img = Image.open("ManualControlWheel/ColorWheelArrow.png")
+        self.curr_image = Image.open("ManualControlWheel/ColorWheelArrow.png")
 
-        img = img.resize((int(img_dim), int(img_dim)), Image.ANTIALIAS)
-        imgTk = ImageTk.PhotoImage(img)
-        canvas.create_image((0, -outer_circle_rad - img_dim / 2), image=imgTk)
-        ManualControlWheel.assign_image(root, imgTk)
+        self.curr_image = self.curr_image.resize((int(img_dim), int(img_dim)), Image.ANTIALIAS)
+        self.imgTk = ImageTk.PhotoImage(self.curr_image)
+        canvas.create_image((0, -outer_circle_rad - img_dim / 2), image=self.imgTk, tags='image_tag')
+        self.assign_image(root, self.imgTk)
 
         # Detect mouse clicked/dragged
         canvas.bind("<Button-1>", self.mouse_clicked)
@@ -81,8 +88,9 @@ class ManualControlWheel:
 
         if cartesian[0] < 0:
             theta += math.radians(180)
-
-        if cartesian[0] == 0:
+        elif cartesian[0] > 0:
+            theta += math.radians(360)
+        else:
             if cartesian[1] <= 0:
                 theta += math.radians(270)
             else:
@@ -92,29 +100,40 @@ class ManualControlWheel:
             if cartesian[0] <= 0:
                 theta = math.radians(180)
 
+        theta -= math.radians(90)
+        theta = -theta
+
+        curr_move = theta - self.total_theta
+
+        # (3) Move arrow to theta and rotate arrow to appropriate location
+        new_arrow_point = Simulator.rotate(self.center, self.canvas.coords('image_tag'), curr_move)
+        self.canvas.coords('image_tag', new_arrow_point)
+
+        self.total_theta = theta
+
         print("Distance from center is: ", center_distance)
         print("Clicked at", cartesian)
         print("Center at", self.center)
         print("Angle of", math.degrees(theta))
         print("Event at", event.x, event.y)
+        print("\n")
 
     # Mouse dragged event
     @staticmethod
     def mouse_dragged(event):
         print("Dragged to", event.x, event.y)
 
-    @staticmethod
-    def assign_image(root, img):
-        if ManualControlWheel.wheels_created == 1:
-            root.one = img
-        elif ManualControlWheel.wheels_created == 2:
-            root.two = img
-        elif ManualControlWheel.wheels_created == 3:
-            root.three = img
-        elif ManualControlWheel.wheels_created == 4:
-            root.four = img
-        elif ManualControlWheel.wheels_created == 5:
-            root.five = img
+    def assign_image(self, root, img):
+        if self.number == 1:
+            self.curr_saved_image = root.one = img
+        elif self.number == 2:
+            self.curr_saved_image = root.two = img
+        elif self.number == 3:
+            self.curr_saved_image = root.three = img
+        elif self.number == 4:
+            self.curr_saved_image = root.four = img
+        elif self.number == 5:
+            self.curr_saved_image = root.five = img
         else:
             print("Too many wheels created")
 
