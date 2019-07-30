@@ -45,11 +45,11 @@ canvas_claw = Canvas(master=manual_tab, width=canvas_width, height=canvas_height
 canvas_claw.place(relx=0.05, rely=0.78)
 
 # Add manual joint manipulation
-ManualControlWheel(canvas_base, 'Base')
-ManualControlWheel(canvas_wrist, 'Wrist')
-ManualControlWheel(canvas_elbow, 'Elbow')
-ManualControlWheel(canvas_shoulder, 'Shoulder')
-ManualControlWheel(canvas_claw, 'Claw')
+ManualControlWheel(canvas_base, tab_control, 'Base')
+ManualControlWheel(canvas_wrist, tab_control, 'Wrist')
+ManualControlWheel(canvas_elbow, tab_control, 'Elbow')
+ManualControlWheel(canvas_shoulder, tab_control, 'Shoulder')
+ManualControlWheel(canvas_claw, tab_control, 'Claw')
 
 Simulator()
 
