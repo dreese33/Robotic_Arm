@@ -1,13 +1,11 @@
-from Ideas.shapes.Point import Point
-
 
 class Cartesian:
 
     @staticmethod
-    def computer_to_cartesian(computer_coordinate, canvas) -> Point:
-        if computer_coordinate.y >= 0:
-            y_coordinate = int(canvas['height']) / 2 - computer_coordinate.y
+    def computer_to_cartesian(computer_coordinate, canvas):
+        if computer_coordinate[1] >= 0:
+            y_coordinate = float(canvas['height']) / 2 - computer_coordinate[1]
         else:
-            y_coordinate = int(canvas['height']) - computer_coordinate.y
+            y_coordinate = float(canvas['height']) - computer_coordinate[1]
 
-        return Point(computer_coordinate.x - int(canvas['width']) / 2, y_coordinate)
+        return computer_coordinate[0] - float(canvas['width']) / 2, y_coordinate
