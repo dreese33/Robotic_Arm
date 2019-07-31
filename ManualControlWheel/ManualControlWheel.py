@@ -19,6 +19,7 @@ class ManualControlWheel:
     curr_image - The TKImage object for this instance
     curr_saved_img - Where the image is saved
     img_pos - Current position of image
+    old_dim - Previous location of arrow in view
     
     Class variables:
     wheels_created - Number of ManualControlWheel objects created during the current execution
@@ -41,19 +42,19 @@ class ManualControlWheel:
         outer_circle_rad = screen_dim_to_use / 3.15
         inner_circle_rad = screen_dim_to_use / 2.15
         label_additional_height = float(screen_dims[0] / 20)
-        self.center = 0, -outer_circle_rad - label_additional_height + self.img_dim / 2 + inner_circle_rad / 2
+        self.center = 0, 0#-outer_circle_rad - label_additional_height + self.img_dim / 2 + inner_circle_rad / 2
         self.draw_axes_center(t)
 
         # Plot axes on graph using turtle
         ManualControlWheel.drawAxes(t, screen_dims)
 
-        t.sety(-outer_circle_rad - label_additional_height + self.img_dim / 2)
+        t.sety(-outer_circle_rad + self.img_dim / 2)
         
         t.pendown()
         t.circle(outer_circle_rad - self.img_dim / 2)
         t.penup()
         
-        t.sety(-inner_circle_rad - label_additional_height + self.img_dim / 2)
+        t.sety(-inner_circle_rad + self.img_dim / 2)
 
         t.pendown()
         t.circle(inner_circle_rad - self.img_dim / 2)
@@ -69,14 +70,24 @@ class ManualControlWheel:
         self.curr_image = self.curr_image.resize((int(self.img_dim), int(self.img_dim)), Image.ANTIALIAS)
         self.imgTk = ImageTk.PhotoImage(self.curr_image)
 
-        self.img_pos = 0, -outer_circle_rad #- self.img_dim / 2
+        self.img_pos = 0, -outer_circle_rad - self.img_dim / 2
 
         fff = Image.new("RGBA", self.curr_image.size, (255, 255, 255, 0))
         out = Image.composite(self.curr_image, fff, self.curr_image)
         self.imgTk = ImageTk.PhotoImage(out)
 
-        canvas.create_image(self.img_pos, image=self.imgTk, tags='image_tag', anchor="center")
+        canvas.create_image((self.img_pos[0],
+                             self.img_pos[1] - math.sin(90) * self.img_dim / 4),
+                            image=self.imgTk, tags='image_tag', anchor="center")
+
+        self.old_dim = self.img_pos
         self.assign_image(root, self.imgTk)
+
+        t.penup()
+        t.setx(canvas.coords('image_tag')[0])
+        t.sety(-canvas.coords('image_tag')[1])
+        t.pendown()
+        t.forward(100)
 
         # Detect mouse clicked/dragged
         canvas.bind("<Button-1>", self.mouse_clicked)
@@ -87,7 +98,7 @@ class ManualControlWheel:
         # (1) Get distance from center of circle to point where mouse was clicked
         cartesian = Cartesian.computer_to_cartesian((event.x, event.y), canvas=self.canvas)
         cartesian = cartesian[0] - 4.0, cartesian[1] + 5.0
-        center_distance = self.distance_from_center(cartesian)
+        #center_distance = self.distance_from_center(cartesian)
 
         # (2) Calculate angle relative to y axis (0 is default position)
         if cartesian[0] != 0:
@@ -115,6 +126,7 @@ class ManualControlWheel:
         curr_move = theta - self.total_theta
 
         # (3) Move arrow to theta and rotate arrow to appropriate location
+        # For some odd reason, this rotation functionality is causing it to be uneven
         rot = self.curr_image.rotate(math.degrees(-theta), resample=Image.BICUBIC, expand=True)
 
         rot.convert("RGBA")
@@ -122,12 +134,23 @@ class ManualControlWheel:
         out = Image.composite(rot, fff, rot)
         self.imgTk = ImageTk.PhotoImage(out)
 
-        old_dim = self.canvas.coords('image_tag')
-        print(old_dim)
-        new_dim = Simulator.rotate(self.center, old_dim, curr_move)
+        # Put this code back if new code does not work
+        #old_dim = self.canvas.coords('image_tag')
+        center_distance = self.distance_from_center(self.old_dim)
+        print("Old dim:", self.old_dim)
+        new_dim = Simulator.rotate(self.center, self.old_dim, curr_move)
+        self.old_dim = new_dim
+        print("New dim:", new_dim)
+
+        """
+        old_dim = self.canvas.coords('image_tag')[0], -self.canvas.coords('image_tag')[1]
+        print("Old dim:", old_dim)
+        new_dim = Simulator.rotate(self.center, old_dim, curr_move)"""
 
         self.canvas.delete('image_tag')
-        self.canvas.create_image((new_dim[0], new_dim[1]), image=self.imgTk, tags='image_tag', anchor="center")
+        self.canvas.create_image((new_dim[0] + (math.cos(-theta + math.radians(90)) * self.img_dim / 4),
+                                 new_dim[1] - (math.sin(-theta + math.radians(90)) * self.img_dim) / 4),
+                                 image=self.imgTk, tags='image_tag', anchor="center")
         self.assign_image(self.master, self.imgTk)
 
         self.total_theta = theta
@@ -135,8 +158,8 @@ class ManualControlWheel:
         print("Distance from center is: ", center_distance)
         print("Clicked at", cartesian)
         print("Center at", self.center)
-        print("Angle of", math.degrees(theta))
-        print("Event at", event.x, event.y)
+        #print("Angle of", math.degrees(theta))
+        #print("Event at", event.x, event.y)
         print("\n")
 
     # Mouse dragged event
