@@ -2,7 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.transforms
-from matplotlib.widgets import RadioButtons, Slider, TextBox
+from matplotlib.widgets import RadioButtons, Slider
 
 matplotlib.use("TkAgg")
 LARGE_FONT = ("Verdana", 12)

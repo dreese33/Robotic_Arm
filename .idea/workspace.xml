@@ -4,6 +4,7 @@
     <list default="true" id="4d329c3c-4eef-47d6-8d8d-a4d69afb2749" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py" beforeDir="false" afterPath="$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
+            <state relative-caret-position="1725">
+              <caret line="115" column="25" lean-forward="true" selection-start-line="115" selection-start-column="25" selection-end-line="115" selection-end-column="25" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -49,11 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="475" selection-start-line="475" selection-end-line="475" />
+            <state relative-caret-position="135">
+              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -72,23 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>firsts</find>
-      <find>left_pressed</find>
-      <find>running</find>
-      <find>simulator_plot_width</find>
-      <find>arm_limbs</find>
-      <find>total_rotations</find>
-      <find>unlocked</find>
-      <find>update_angles_thread_lock</find>
-      <find>current_fig_axes</find>
-      <find>plot</find>
-      <find>mouse_clicked</find>
-      <find>int`</find>
-      <find>assign_image</find>
-      <find>number</find>
-      <find>root_val</find>
-      <find>root</find>
-      <find>expand</find>
       <find>rotate</find>
       <find>int</find>
       <find>lin</find>
@@ -99,9 +83,26 @@
       <find>old_</find>
       <find>old_dim</find>
       <find>old_dim`</find>
-      <find>self.center</find>
       <find>draw</find>
       <find>circle</find>
+      <find>forward</find>
+      <find>draw_a</find>
+      <find>mouse_dragged</find>
+      <find>img_dim</find>
+      <find>self.canvas</find>
+      <find>self.total_theta</find>
+      <find>self.curr_saved_image</find>
+      <find>curr_saved_img</find>
+      <find>self.master</find>
+      <find>self.img_dim</find>
+      <find>self.center</find>
+      <find>self.number</find>
+      <find>self.curr_image</find>
+      <find>img_tk</find>
+      <find>self.imgTk</find>
+      <find>self.img_pos</find>
+      <find>self.old_dim</find>
+      <find>textbox</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -132,10 +133,10 @@
         <option value="$PROJECT_DIR$/Ideas/shapes/Shape.py" />
         <option value="$PROJECT_DIR$/Second_Project/SecondProjectTest.py" />
         <option value="$PROJECT_DIR$/Robotic_Arm_Control_Gui.py" />
-        <option value="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" />
         <option value="$PROJECT_DIR$/Main.py" />
         <option value="$PROJECT_DIR$/Ideas/shapes/Cartesian.py" />
         <option value="$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py" />
+        <option value="$PROJECT_DIR$/RoboticArmSimulator/Simulator.py" />
       </list>
     </option>
   </component>
@@ -385,18 +386,19 @@
       <workItem from="1564086933877" duration="294000" />
       <workItem from="1564154662898" duration="1862000" />
       <workItem from="1564491426781" duration="19655000" />
-      <workItem from="1564593920070" duration="3755000" />
+      <workItem from="1564593920070" duration="3917000" />
+      <workItem from="1564610470980" duration="2628000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="173966000" />
+    <option name="totallyTimeSpent" value="176756000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.35693848" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.36194563" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -447,7 +449,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Robotic_Arm$Robotic_Arm_Control_Gui.coverage" NAME="Robotic_Arm_Control_Gui Coverage Results" MODIFIED="1563398181899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Robotic_Arm$Main.coverage" NAME="Main Coverage Results" MODIFIED="1564597838405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Robotic_Arm$Main.coverage" NAME="Main Coverage Results" MODIFIED="1564616247472" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$SecondProjectTest.coverage" NAME="SecondProjectTest Coverage Results" MODIFIED="1563125777938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Second_Project" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1562616332758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Robotic_Arm$RoboticArm.coverage" NAME="RoboticArm Coverage Results" MODIFIED="1563915427604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -612,22 +614,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
+    <entry file="file://$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="475" selection-start-line="475" selection-end-line="475" />
+        <state relative-caret-position="1725">
+          <caret line="115" column="25" lean-forward="true" selection-start-line="115" selection-start-column="25" selection-end-line="115" selection-end-column="25" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ManualControlWheel/ManualControlWheel.py">
+    <entry file="file://$PROJECT_DIR$/RoboticArmSimulator/Simulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
+        <state relative-caret-position="135">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
