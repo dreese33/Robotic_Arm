@@ -1,7 +1,6 @@
 from time import sleep
 import RPi.GPIO as gpio
-from StepperMotorControl.StepperMotor import StepperMotor
-from StepperMotorControl.StepperMotor import MotorStates
+from StepperMotorControl.StepperMotor import StepperMotor, MotorStates
 
 direction_gpio1 = 20
 direction_gpio2 = 12

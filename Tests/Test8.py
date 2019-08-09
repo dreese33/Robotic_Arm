@@ -3,21 +3,23 @@ import RPi.GPIO as gpio
 
 stepGpio = 21
 directionGpio = 20
-stepGpio1 = 16
-directionGpio1 = 12
-stepGpio2 = 26
-directionGpio2 = 19
+stepGpio1 = 26
+directionGpio1 = 19
+stepGpio2 = 16
+directionGpio2 = 12
 CW = 0
 CCW = 1
 
-speed = 0.0003
 steps = 6400
 steps_full = steps * 2
+
+speed = 0.00001
 
 gpio.setwarnings(False)
 gpio.setmode(gpio.BCM)
 
 #1
+
 gpio.setup(directionGpio, gpio.OUT)
 gpio.setup(stepGpio, gpio.OUT)
 
