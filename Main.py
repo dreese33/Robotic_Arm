@@ -2,7 +2,18 @@ from tkinter import *
 from ManualControlWheel.ManualControlWheel import ManualControlWheel
 from tkinter import ttk
 from RoboticArmSimulator.Simulator import Simulator
+from StepperMotorControl.StepperMotor import StepperMotor, MotorStates, Direction, Microstepping
+from ManualControlWheel.ManualControlWheel import ManualControlWheel
 
+
+# Define gpio pins
+wrist_step = 16
+elbow_step = 26
+shoulder_step = 21
+
+wrist_dir = 12
+elbow_dir = 19
+shoulder_dir = 20
 
 window = Tk()
 
@@ -43,13 +54,18 @@ canvas_shoulder.place(relx=0.80, rely=0.77)
 canvas_claw = Canvas(master=manual_tab, width=canvas_width, height=canvas_height)
 canvas_claw.place(relx=0.01, rely=0.77)
 
-# Add manual joint manipulation
-ManualControlWheel(canvas_base, tab_control, 'Base')
-ManualControlWheel(canvas_wrist, tab_control, 'Wrist')
-ManualControlWheel(canvas_elbow, tab_control, 'Elbow')
-ManualControlWheel(canvas_shoulder, tab_control, 'Shoulder')
-ManualControlWheel(canvas_claw, tab_control, 'Claw')
+# Define motors
+motors = [StepperMotor(wrist_step, wrist_dir, Microstepping.SIXTEENTH, Direction.CCW, 7),
+          StepperMotor(elbow_step, elbow_dir, Microstepping.SIXTEENTH, Direction.CCW, 7),
+          StepperMotor(shoulder_step, shoulder_dir, Microstepping.SIXTEENTH, Direction.CCW, 8)]
 
-Simulator()
+# Add manual joint manipulation
+ManualControlWheel(canvas_base, tab_control, -1, 'Base')
+ManualControlWheel(canvas_wrist, tab_control, motors[0], 'Wrist')
+ManualControlWheel(canvas_elbow, tab_control, motors[1], 'Elbow')
+ManualControlWheel(canvas_shoulder, tab_control, motors[2], 'Shoulder')
+ManualControlWheel(canvas_claw, tab_control, -1, 'Claw')
+
+Simulator(motors)
 
 window.mainloop()

@@ -3,6 +3,7 @@ from enum import Enum
 import RPi.GPIO as gpio
 
 
+
 class MotorStates(Enum):
     OFF = 1
     LOW = 2
@@ -255,7 +256,7 @@ class StepperMotor:
     # Untested
     # TODO -- Try to optimize this code by using a two dimensional array
     @staticmethod
-    def step_motors_micro(motors, steps):
+    def step_motors_micro(motors, steps, speeds):
         motors_copy = list(motors)
         
         if len(motors) != len(steps):
@@ -286,7 +287,7 @@ class StepperMotor:
             num = 0
             for motor in motors_copy:
                 motor.curr_sleep += min_sleep_val
-                if motor.curr_sleep >= motor.time:
+                if motor.curr_sleep >= (motor.time * speeds[num]):
                     StepperMotor.step_motor_micro(motor, delete_elements, num)
                     num += 1
             

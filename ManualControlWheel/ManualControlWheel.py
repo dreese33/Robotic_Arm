@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import Image
 from PIL import ImageTk
 import math
+import numpy
 from Ideas.shapes.Cartesian import Cartesian
 from RoboticArmSimulator.Simulator import Simulator
 
@@ -10,6 +11,7 @@ from RoboticArmSimulator.Simulator import Simulator
 class ManualControlWheel:
 
     wheels_created = 0
+    wheel_lock = True
 
     """
     Class variables:
@@ -18,7 +20,9 @@ class ManualControlWheel:
     Instance variables: 
     canvas - Canvas of current ManualControlWheel
     total_theta - Total amount to rotate arrow by
-    master - Tabcontrol view containing 
+    theta_prev_diff - The difference between the old theta and current (used for moving motors)
+    master - Tabcontrol view containing
+    motor - The motor that is connected to the ManualControlWheel
     
     img_dim - Dimension of arrow image
     center - Center of both circles
@@ -28,12 +32,19 @@ class ManualControlWheel:
     imgTk - Arrow image
     
     old_dim - Previous location of arrow in view
+    middle_circle_y - Middle circle y_pos
+    middle_circle_rad - Middle circle radius
+    
+    prev_arrow_pos - Previous position of the arrow in degrees
+    t - The turtle object
+    curr_arc - Current arc drawn in circle
     """
 
-    def __init__(self, canvas, root, title):
+    def __init__(self, canvas, root, motor, title):
         self.canvas = canvas
         self.total_theta = 0
         self.master = root
+        self.motor = motor
 
         t = turtle.RawTurtle(canvas)
         t.hideturtle()
@@ -52,19 +63,26 @@ class ManualControlWheel:
 
         # Plot axes on graph using turtle
         #ManualControlWheel.draw_axes(t, screen_dims)
+        outer_y = -outer_circle_rad + self.img_dim / 2
+        inner_y = -inner_circle_rad + self.img_dim / 2
+        self.middle_circle_y = (outer_y + inner_y) / 2
+        
+        outer_rad = outer_circle_rad - self.img_dim / 2
+        inner_rad = inner_circle_rad - self.img_dim / 2
+        self.middle_circle_rad = (outer_rad + inner_rad) / 2
 
         t.penup()
         t.setx(0)
-        t.sety(-outer_circle_rad + self.img_dim / 2)
+        t.sety(outer_y)
         
         t.pendown()
-        t.circle(outer_circle_rad - self.img_dim / 2)
+        t.circle(outer_rad)
         t.penup()
         
-        t.sety(-inner_circle_rad + self.img_dim / 2)
+        t.sety(inner_y)
 
         t.pendown()
-        t.circle(inner_circle_rad - self.img_dim / 2)
+        t.circle(inner_rad)
         t.penup()
 
         canvas.create_text((0, (-screen_dims[1] / 2) + label_additional_height), text=title, width=100)
@@ -89,6 +107,13 @@ class ManualControlWheel:
 
         self.old_dim = img_pos
         self.assign_image(root, self.imgTk)
+        self.prev_arrow_pos = 0
+        self.t = turtle.RawTurtle(canvas)
+        self.t.hideturtle()
+        self.t._tracer(0)
+        self.curr_arc = None
+        #self.draw_middle_circle(t)
+        #self.draw_circle_arc(t, 10, -300)
 
         """ Draws line at current arrow coordinate 
         t.penup()
@@ -100,10 +125,14 @@ class ManualControlWheel:
         # Detect mouse clicked/dragged
         canvas.bind("<Button-1>", self.mouse_clicked)
         canvas.bind("<B1-Motion>", self.mouse_dragged)
+        canvas.bind("<ButtonRelease-1>", self.mouse_released)
         
     # Mouse clicked event
     def mouse_clicked(self, event):
-        self.move_arrow(event)
+        print("Clicked")
+        if ManualControlWheel.wheel_lock:
+            self.move_arrow(event)
+            print("Rotated")
 
         """ For testing purposes
         print("Distance from center is: ", center_distance)
@@ -115,7 +144,16 @@ class ManualControlWheel:
 
     # Mouse dragged event
     def mouse_dragged(self, event):
-        self.move_arrow(event)
+        if ManualControlWheel.wheel_lock:
+            self.move_arrow(event)
+        
+    # Implement motor stepping when mouse is released
+    def mouse_released(self, event):
+        ManualControlWheel.wheel_lock = False
+        if self.motor != -1:
+            self.prev_arrow_pos = self.total_theta
+            self.motor.step_motor_degrees(self.theta_prev_diff)
+        ManualControlWheel.wheel_lock = True
 
     def assign_image(self, root, img):
         if self.number == 1:
@@ -160,6 +198,8 @@ class ManualControlWheel:
         theta = -theta
 
         curr_move = theta - self.total_theta
+        self.theta_prev_diff = curr_move
+        print("Current move", math.degrees(self.theta_prev_diff))
 
         # (3) Move arrow to theta and rotate arrow to appropriate location
         rot = self.curr_image.rotate(math.degrees(-theta), resample=Image.BICUBIC, expand=True)
@@ -182,6 +222,15 @@ class ManualControlWheel:
         self.assign_image(self.master, self.imgTk)
 
         self.total_theta = theta
+        
+        self.t.clear()
+        
+        #deg = math.degrees(self.total_theta)
+        #if deg > 180:
+        #    deg -= 180
+        #self.draw_circle_arc(self.t, math.degrees(self.prev_arrow_pos), -deg)  
+        
+        print(self.total_theta)
 
     @staticmethod
     def draw_axes(t, screen_dims):
@@ -224,6 +273,31 @@ class ManualControlWheel:
         t.sety(self.center[1])
         t.pendown()
         t.forward(100)
+        t.penup()
+        
+    # First step to drawing following circle
+    def draw_middle_circle(self, t):
+        t.penup()
+        t.setx(0)
+        t.sety(self.middle_circle_y)
+        t.pensize(5)
+        t.pencolor('blue')
+        t.pendown()
+        t.circle(self.middle_circle_rad)
+        t.penup()
+        
+    # Draw any circle arc
+    def draw_circle_arc(self, t, start_degree, degrees):
+        start_degree += 180
+        start_pt = Simulator.rotate((0, 0), (0, self.middle_circle_y), math.radians(start_degree))
+        t.penup()
+        t.setx(start_pt[0])
+        t.sety(start_pt[1])
+        t.setheading(start_degree)
+        t.pensize(5)
+        t.pencolor('blue')
+        t.pendown()
+        t.circle(self.middle_circle_rad, degrees)
         t.penup()
 
     def distance_from_center(self, point):

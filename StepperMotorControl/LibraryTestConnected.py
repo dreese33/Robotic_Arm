@@ -114,5 +114,5 @@ for i in range(3):
 """
 Testing step_motors_micro, step_degrees_micro
 """
-#StepperMotor.step_motors_degrees(motors, [54, 54, 54])
-StepperMotor.step_motors_micro(motors, [30, 30, 30])
+StepperMotor.step_motors_degrees(motors, [54, 54, 54])
+#StepperMotor.step_motors_micro(motors, [30, 30, 30])

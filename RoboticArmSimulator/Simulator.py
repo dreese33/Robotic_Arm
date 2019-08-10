@@ -54,16 +54,19 @@ class Simulator:
 
     arm_limbs = []
     arm_joints = []
+    motors = []
 
     total_rotations = [0, 0, 0]
     unlocked = True
 
     firsts = [True, True, True]
+    simulator_lock = True
 
-    def __init__(self):
+    def __init__(self, motors):
 
         if not Simulator.running:
             Simulator.running = True
+            Simulator.motors = motors
 
             quadrant_width = Simulator.simulator_plot_width / 2
 
@@ -72,7 +75,7 @@ class Simulator:
             figure.canvas.mpl_connect('button_release_event', self.mouse_released)
             figure.canvas.mpl_connect('close_event', Simulator.handle_close)
             figure.canvas.mpl_connect('motion_notify_event', self.mouse_dragged)
-            figure.canvas.mpl_connect('key_press_event', self.radio_control)
+            #figure.canvas.mpl_connect('key_press_event', self.radio_control)
             figure.canvas.mpl_connect('key_press_event', self.arrow_key_listener)
 
             plt.axis([-quadrant_width, quadrant_width, -quadrant_width, quadrant_width])
@@ -143,7 +146,7 @@ class Simulator:
 
             rax = plt.axes([0.40, 0.17, 0.50, 0.03])
 
-            init_val = 6
+            init_val = 16
             self.speed = Simulator.to_radians(init_val)
 
             self.speed_slider = Slider(rax, 'Speed' + '\n' + '(in degrees)', 0.1, 20, valinit=init_val)
@@ -164,19 +167,18 @@ class Simulator:
 
             initial_text = r'${:.0f}\degree$'.format(0)
             self.axbox_wrist = plt.axes([0.40, 0.07, 0.1, 0.05])
-            self.axbox_wrist.text(0, 0, initial_text, fontsize=15,
-                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_wrist.text(0, 0, initial_text, fontsize=15)
             self.axbox_wrist.axis('off')
 
             self.axbox_elbow = plt.axes([0.61, 0.07, 0.1, 0.05])
-            self.axbox_elbow.text(0, 0, initial_text, fontsize=15,
-                                  bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_elbow.text(0, 0, initial_text, fontsize=15)
             self.axbox_elbow.axis('off')
 
             self.axbox_shoulder = plt.axes([0.84, 0.07, 0.1, 0.05])
-            self.axbox_shoulder.text(0, 0, initial_text, fontsize=15,
-                                     bbox=dict(facecolor='none', edgecolor='black'))
+            self.axbox_shoulder.text(0, 0, initial_text, fontsize=15)
             self.axbox_shoulder.axis('off')
+            
+            self.axboxes = [self.axbox_wrist, self.axbox_elbow, self.axbox_shoulder]
 
             plt.axes(self.current_fig_axes)
 
@@ -209,6 +211,12 @@ class Simulator:
     def _add_joint(center, radius, color_str):
         return plt.Circle(center, radius=radius, fc=color_str)
 
+    def _update_angles1(self, degrees):
+        for val in range(len(degrees)):
+            self.axboxes[val].clear()
+            self.axboxes[val].text(0, 0, r'${:.0f}\degree$'.format(Simulator.to_degrees(degrees[val])), fontsize=15)
+            self.axboxes[val].axis('off')
+
     def _update_angles(self, degrees):
         if self.curr_joint_rotation == 0:
             self.axbox_wrist.clear()
@@ -232,7 +240,7 @@ class Simulator:
         self.hand.set_xy(self._get_limb_origin(self.wrist, self.hand_width))
         self.forearm.set_xy(self._get_limb_origin(self.elbow, self.forearm_width))
         self.arm.set_xy(self._get_limb_origin(self.shoulder, self.forearm_width))
-        plt.gca().figure.canvas.draw()
+        #plt.gca().figure.canvas.draw()
 
     def rotate_joints(self, radians):
 
@@ -261,9 +269,11 @@ class Simulator:
 
         for i in range(len(Simulator.total_rotations)):
             Simulator.total_rotations[i] = self.simplify_radians(Simulator.total_rotations[i])
-
-        self._update_angles(Simulator.to_degrees(Simulator.total_rotations[self.curr_joint_rotation]))
-
+            
+        #print("About to update angles")
+        self._update_angles1(Simulator.total_rotations)
+        Simulator.motors[self.curr_joint_rotation].step_motor_degrees(Simulator.to_degrees(radians))
+        #self._update_angles(Simulator.to_degrees(Simulator.total_rotations[self.curr_joint_rotation]))
         plt.gca().figure.canvas.draw()
 
     @staticmethod
@@ -322,61 +332,66 @@ class Simulator:
         self.previous_arrow = current_arrow
 
     # Adds key controls to the radio buttons for optimal control of the simulator
-    def radio_control(self, event):
-        if event.key == 'c':
-            self.previous_arrow = 0
-            self.reverse_clockwise()
-        elif event.key == '1':
-            self.curr_joint_rotation = 0
-            self.joint_selector.set_active(0)
-            self.previous_arrow = 0
-        elif event.key == '2':
-            self.curr_joint_rotation = 1
-            self.joint_selector.set_active(1)
-            self.previous_arrow = 0
-        elif event.key == '3':
-            self.curr_joint_rotation = 2
-            self.joint_selector.set_active(2)
-            self.previous_arrow = 0
+    #def radio_control(self, event):
+        
 
     # Move the robot based on its current joint position and arrow keys
     def arrow_key_listener(self, event):
-        if event.key == 'right':
-            if self.previous_arrow == 2:
-                self.opposite_arrow_pressed(1)
-            else:
-                if self.previous_arrow != 1:
-                    self.move_robot_right()
-                    self.previous_arrow = 1
+        if Simulator.simulator_lock:
+            Simulator.simulator_lock = False
+            if event.key == 'c':
+                self.previous_arrow = 0
+                self.reverse_clockwise()
+            elif event.key == '1':
+                self.curr_joint_rotation = 0
+                self.joint_selector.set_active(0)
+                self.previous_arrow = 0
+            elif event.key == '2':
+                self.curr_joint_rotation = 1
+                self.joint_selector.set_active(1)
+                self.previous_arrow = 0
+            elif event.key == '3':
+                self.curr_joint_rotation = 2
+                self.joint_selector.set_active(2)
+                self.previous_arrow = 0
+            elif event.key == 'right':
+                if self.previous_arrow == 2:
+                    self.opposite_arrow_pressed(1)
                 else:
-                    self.rotate_joints(self.speed)
-        elif event.key == 'left':
-            if self.previous_arrow == 1:
-                self.opposite_arrow_pressed(2)
-            else:
-                if self.previous_arrow != 2:
-                    self.move_robot_left()
-                    self.previous_arrow = 2
+                    if self.previous_arrow != 1:
+                        self.move_robot_right()
+                        self.previous_arrow = 1
+                    else:
+                        self.rotate_joints(self.speed)
+            elif event.key == 'left':
+                if self.previous_arrow == 1:
+                    self.opposite_arrow_pressed(2)
                 else:
-                    self.rotate_joints(self.speed)
-        elif event.key == 'up':
-            if self.previous_arrow == 4:
-                self.opposite_arrow_pressed(3)
-            else:
-                if self.previous_arrow != 3:
-                    self.move_robot_up()
-                    self.previous_arrow = 3
+                    if self.previous_arrow != 2:
+                        self.move_robot_left()
+                        self.previous_arrow = 2
+                    else:
+                        self.rotate_joints(self.speed)
+            elif event.key == 'up':
+                if self.previous_arrow == 4:
+                    self.opposite_arrow_pressed(3)
                 else:
-                    self.rotate_joints(self.speed)
-        elif event.key == 'down':
-            if self.previous_arrow == 3:
-                self.opposite_arrow_pressed(4)
-            else:
-                if self.previous_arrow != 4:
-                    self.move_robot_down()
-                    self.previous_arrow = 4
+                    if self.previous_arrow != 3:
+                        self.move_robot_up()
+                        self.previous_arrow = 3
+                    else:
+                        self.rotate_joints(self.speed)
+            elif event.key == 'down':
+                if self.previous_arrow == 3:
+                    self.opposite_arrow_pressed(4)
                 else:
-                    self.rotate_joints(self.speed)
+                    if self.previous_arrow != 4:
+                        self.move_robot_down()
+                        self.previous_arrow = 4
+                    else:
+                        self.rotate_joints(self.speed)
+            #print("Set to true")
+            Simulator.simulator_lock = True
 
     def move_robot_right(self):
         # TEST
