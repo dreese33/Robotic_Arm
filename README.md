@@ -1,2 +1,2 @@
 # Robotic_Arm
-Use of stepper motors and 3d printed parts to make a robotic arm
+Use of stepper motors and 3d printed parts to make a robotic arm. Video description coming soon!
